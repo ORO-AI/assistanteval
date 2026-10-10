@@ -216,6 +216,11 @@ class KeywordJudge:
         if kind in ("user_hears_approval", "user_hears_proposal"):
             asked = q.id == f"{kind}:{self.proposed()}"
             return _yes(asked and self.asks_approval(c["assistant_turn"]))
+        if kind == "user_hears_offer":  # an offer of more help to turn down
+            offers = ("want me to", "anything else")
+            return _yes(
+                any(q.startswith(offers) for q in _questions(c["assistant_turn"]))
+            )
         if kind in ("user_checks_proposal", "user_rule"):
             return _yes(self.meets(c["assistant_turn"], c["condition"]))
         if kind == "user_checks_rewording":
