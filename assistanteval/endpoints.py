@@ -26,6 +26,8 @@ The roles:
 - ``CHECKER``: optional, a model other than the JUDGE. The grader re-checks the
   simulated user's approval-rule decisions, which the judge made, with the
   reader; when the reader is unsure, the checker answers before a person does.
+  It also answers whether a result holds despite the simulated user's
+  misreadings, which otherwise waits for a person.
 
 Records keep each role's model, API and base URL, never its key.
 """

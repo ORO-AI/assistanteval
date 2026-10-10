@@ -43,7 +43,7 @@ To run tasks in [Harbor](https://github.com/harbor-framework/harbor) against an 
 | `READER` | Reads each assistant turn for the simulated user, and answers the grader's questions first | No; without it the judge reads too |
 | `WRITER` | Rewords the simulated user's fixed replies in the persona's voice | No; without it the fixed replies are sent |
 | `BASELINE` | The model under test in the built-in tool loop | For `--assistant model_baseline` |
-| `CHECKER` | A model other than the judge that settles the grader's re-checks of the simulated user's approval decisions when the reader is unsure | No; without it those go to a person |
+| `CHECKER` | A model other than the judge that settles the grader's re-checks of the simulated user's decisions when the reader is unsure, and whether a result holds despite the user's misreadings | No; without it those go to a person |
 
 Each role reads `ASSISTANTEVAL_<ROLE>_MODEL`, `_BASE_URL`, `_API_KEY`, and optionally `_API` (`openai`, or `jev` for TypeSafe's Jev as the reader) and `_EXTRA_BODY`. Records keep each role's model and base URL, never its key. Scores from different judge models are not directly comparable: report the judges with the scores.
 
@@ -58,6 +58,8 @@ export ASSISTANTEVAL_READER_API=jev ASSISTANTEVAL_READER_MODEL=jev-1.13.0 ASSIST
 export ASSISTANTEVAL_JUDGE_MODEL=gpt-5.6-sol ASSISTANTEVAL_JUDGE_API_KEY=<OpenAI key>
 export ASSISTANTEVAL_WRITER_MODEL=z-ai/glm-5.3-flash ASSISTANTEVAL_WRITER_BASE_URL=https://openrouter.ai/api/v1 \
        ASSISTANTEVAL_WRITER_API_KEY=<OpenRouter key> ASSISTANTEVAL_WRITER_EXTRA_BODY='{"reasoning": {"effort": "low"}}'
+export ASSISTANTEVAL_CHECKER_MODEL=google/gemini-3.1-pro-preview ASSISTANTEVAL_CHECKER_BASE_URL=https://openrouter.ai/api/v1 \
+       ASSISTANTEVAL_CHECKER_API_KEY=<OpenRouter key>
 ```
 
 **OpenRouter**: one key, for development. The same judge and writer models; the reader is TypeSafe's Jev Router, which picks its model for each request rather than pinning `jev-1.13.0`. Its readings can differ from `jev-1.13.0`'s, so compare with published results only under the official setup.
@@ -68,6 +70,7 @@ export ASSISTANTEVAL_READER_MODEL=typesafe/jev-router ASSISTANTEVAL_READER_BASE_
 export ASSISTANTEVAL_JUDGE_MODEL=openai/gpt-5.6-sol ASSISTANTEVAL_JUDGE_BASE_URL=$OR ASSISTANTEVAL_JUDGE_API_KEY=$KEY
 export ASSISTANTEVAL_WRITER_MODEL=z-ai/glm-5.3-flash ASSISTANTEVAL_WRITER_BASE_URL=$OR ASSISTANTEVAL_WRITER_API_KEY=$KEY \
        ASSISTANTEVAL_WRITER_EXTRA_BODY='{"reasoning": {"effort": "low"}}'
+export ASSISTANTEVAL_CHECKER_MODEL=google/gemini-3.1-pro-preview ASSISTANTEVAL_CHECKER_BASE_URL=$OR ASSISTANTEVAL_CHECKER_API_KEY=$KEY
 ```
 
 To choose other judges, see [docs/grader/README.md](https://github.com/ORO-AI/assistanteval/blob/main/docs/grader/README.md#choosing-the-judges).

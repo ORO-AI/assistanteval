@@ -29,7 +29,7 @@ from assistanteval.simulated_user import ASKS_TO_DO, PROPOSES, written_since_rep
 from assistanteval.task import Task
 from assistanteval.world import MONEY, PRIVATE_CHANGE, READ, VISIBLE
 
-GRADER_VERSION = "0.8.6"
+GRADER_VERSION = "0.8.7"
 SUPPORTED = "supported by recorded evidence"
 NONE_OF_THESE = "none of these"
 NOT_OBSERVED = "action outside the recorded services"
@@ -1353,7 +1353,9 @@ def _causality_question(
             "A missing action after an erroneous refusal or withheld prerequisite may have "
             "been caused by that reply. Do not treat the pass/fail direction alone as proof.",
         },
-        rungs=(),
+        # Never the reader or judge, whose readings it weighs: a CHECKER, if
+        # set, else a person.
+        rungs=("checker",),
     )
 
 

@@ -132,10 +132,13 @@ measured 3/33 "i don't know" and 6/32 disputed runs.
 
   Per model, the differences (-4 to +5 points on about 30 scored runs each)
   are within run-to-run noise. Version 2 changes the conversation, not what the
-  scores measure. Regraded with the CHECKER, runs waiting for a person go
-  from 21 to 17 and 20 to 17; nearly all that remain wait on the question only
-  a person decides (whether a result holds despite the simulated user's
-  misreadings), and pass rates stay at 65.0% and 65.6%.
+  scores measure. Regraded with the CHECKER answering re-checks only, runs
+  waiting for a person go from 21 to 17 and 20 to 17; nearly all that remain
+  wait on whether a result holds despite the simulated user's misreadings.
+  With the CHECKER also answering that (grader 0.8.7, the official setup): 21 to
+  3 and 20 to 1, at pass rates of 62.1% [54.8%, 69.0%] and 63.7% [56.4%,
+  70.4%] (the formerly pending runs now count); the checker said the result
+  holds 29 times and not 3.
 - **Published records.** On the 1,530 full published records, this grader
   reproduces all 918 published outcomes of trials 3-5 from the published
   answers (once the person-only question's answers, whose keys embed the old
