@@ -1,6 +1,6 @@
 # Running AssistantEval in Harbor
 
-[Harbor](https://github.com/harbor-framework/harbor) runs a task against any agent harness, locally in Docker or on cloud sandboxes, and its task format feeds several RL trainers. AssistantEval tasks run there as simulated-user trials: AssistantEval's simulated user plays the user, the harness under test is Harbor's ACP target, and AssistantEval's grader is the verifier. Pinned to Harbor 0.24.0: from a checkout, `uv sync --extra harbor`; elsewhere, `pip install "assistanteval[harbor] @ git+https://github.com/ORO-AI/assistanteval"`.
+[Harbor](https://github.com/harbor-framework/harbor) runs a task against any agent harness, locally in Docker or on cloud sandboxes, and its task format feeds several RL trainers. AssistantEval tasks run there as simulated-user trials: AssistantEval's simulated user plays the user, the harness under test is Harbor's ACP target, and AssistantEval's grader is the verifier. Pinned to Harbor 0.24.0: from a checkout, `uv sync --extra harbor`; elsewhere, `pip install 'assistanteval[harbor]'`.
 
 ## Run a task
 

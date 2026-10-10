@@ -8,14 +8,17 @@ The assistant can be any model in a minimal tool loop, an open agent harness you
 
 ## How a run works
 
-1. **Task** (`tasks/<id>.json`): the world's fixtures, the opening message, what only the user knows, when the user approves an action, and the grading rules. See [tasks/README.md](tasks/README.md).
+1. **Task** (`tasks/<id>.json`): the world's fixtures, the opening message, what only the user knows, when the user approves an action, and the grading rules. See [tasks/README.md](https://github.com/ORO-AI/assistanteval/blob/main/tasks/README.md).
 2. **Runner** (`assistanteval/run_task.py`): starts the task's services on a local server with fresh per-run keys, resets the assistant, connects the services, and runs the conversation with the simulated user (`assistanteval/simulated_user.py`).
-3. **Run record** (`runs/<run_id>/`): the conversation, every service request with its input and output, the start and end state, the simulated user's decisions, and which models played each role. See [docs/run-record.md](docs/run-record.md).
-4. **Grader** (`assistanteval/grader/`): validity checks, then rules answered by code or by a judge ladder (a saved human answer, the reader, the judge, then a human annotation queue), then a pass-rate report. See [docs/grader/README.md](docs/grader/README.md).
+3. **Run record** (`runs/<run_id>/`): the conversation, every service request with its input and output, the start and end state, the simulated user's decisions, and which models played each role. See [docs/run-record.md](https://github.com/ORO-AI/assistanteval/blob/main/docs/run-record.md).
+4. **Grader** (`assistanteval/grader/`): validity checks, then rules answered by code or by a judge ladder (a saved human answer, the reader, the judge, then a human annotation queue), then a pass-rate report. See [docs/grader/README.md](https://github.com/ORO-AI/assistanteval/blob/main/docs/grader/README.md).
 
 ## Run it
 
+The package is on PyPI (`pip install assistanteval`, with `[harbor]` for Harbor); the tasks live in this repository, so run from a clone:
+
 ```bash
+git clone https://github.com/ORO-AI/assistanteval && cd assistanteval
 uv sync
 uv run pytest -q          # includes an offline end-to-end run: no API key needed
 
@@ -28,9 +31,9 @@ uv run assistanteval grade runs/<run_id>
 uv run assistanteval report runs/ --out grades/
 ```
 
-To run tasks in [Harbor](https://github.com/harbor-framework/harbor) against an agent harness such as Hermes Agent or OpenCode, see [docs/harbor.md](docs/harbor.md).
+To run tasks in [Harbor](https://github.com/harbor-framework/harbor) against an agent harness such as Hermes Agent or OpenCode, see [docs/harbor.md](https://github.com/ORO-AI/assistanteval/blob/main/docs/harbor.md).
 
-`--assistant` also takes `module:factory`, so an adapter for your own harness or product can live in its own package. See [docs/developing-episodes.md](docs/developing-episodes.md) for the assistant contract, the services and how to add a task or a service.
+`--assistant` also takes `module:factory`, so an adapter for your own harness or product can live in its own package. See [docs/developing-episodes.md](https://github.com/ORO-AI/assistanteval/blob/main/docs/developing-episodes.md) for the assistant contract, the services and how to add a task or a service.
 
 ## Model roles
 
@@ -64,7 +67,7 @@ export ASSISTANTEVAL_WRITER_MODEL=z-ai/glm-5.3-flash ASSISTANTEVAL_WRITER_BASE_U
        ASSISTANTEVAL_WRITER_EXTRA_BODY='{"reasoning": {"effort": "low"}}'
 ```
 
-To choose other judges, see [docs/grader/README.md](docs/grader/README.md#choosing-the-judges).
+To choose other judges, see [docs/grader/README.md](https://github.com/ORO-AI/assistanteval/blob/main/docs/grader/README.md#choosing-the-judges).
 
 ## Repository layout
 
@@ -77,7 +80,7 @@ To choose other judges, see [docs/grader/README.md](docs/grader/README.md#choosi
 | `assistanteval/grader/` | Grading, annotation and the pass-rate report. |
 | `assistanteval/services/`, `world.py`, `connectors.py` | The synthetic services, the engine that serves them over REST and MCP, and the local server the runner opens them on. |
 | `assistanteval/assistants/` | Built-in assistants: the model baseline and a scripted reference assistant. |
-| `assistanteval/harbor/`, `remote.py`, `assistants/acp.py` | Running tasks in Harbor against any ACP harness. See [docs/harbor.md](docs/harbor.md). |
+| `assistanteval/harbor/`, `remote.py`, `assistants/acp.py` | Running tasks in Harbor against any ACP harness. See [docs/harbor.md](https://github.com/ORO-AI/assistanteval/blob/main/docs/harbor.md). |
 | `docs/frameworks.md` | Which open eval and RL frameworks to integrate with, and why. |
 
 ## Safety rails
@@ -87,4 +90,4 @@ To choose other judges, see [docs/grader/README.md](docs/grader/README.md#choosi
 
 ## License
 
-The code is licensed under the [Apache License 2.0](LICENSE). The tasks and their fixtures in `tasks/` are licensed under [CC BY 4.0](tasks/LICENSE): you may share and adapt them, including commercially, with attribution to AssistantEval by ORO AI. See [NOTICE](NOTICE).
+The code is licensed under the [Apache License 2.0](https://github.com/ORO-AI/assistanteval/blob/main/LICENSE). The tasks and their fixtures in `tasks/` are licensed under [CC BY 4.0](https://github.com/ORO-AI/assistanteval/blob/main/tasks/LICENSE): you may share and adapt them, including commercially, with attribution to AssistantEval by ORO AI. See [NOTICE](https://github.com/ORO-AI/assistanteval/blob/main/NOTICE).
