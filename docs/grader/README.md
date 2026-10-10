@@ -94,7 +94,7 @@ Every judge answer is saved in `answers.json`. Each answer is keyed by the quest
 
 The causality question is never asked of a judge: only an explicit saved human `true` keeps the result, and a missing or negative answer keeps the default outcome. Its key includes the task, the turns, the requests, the reading judgments and the gates, so any change to those asks it again. The verdict records it as `simulator_causality`.
 
-The published results were graded with grader 0.8.3; the current grader is 0.8.5. Regraded offline from their saved answers, every published run keeps its outcome and gates. On other runs, two differences can move a score:
+The published results were graded with grader 0.8.3; the current grader is 0.8.6. Regraded offline from their saved answers with grader 0.8.5, every published run keeps its outcome and gates. Grader 0.8.6 also accepts in code a date-time that equals an earlier date-time of the same action plus exactly the gap between those two fields on the object the action changes, as a service result showed it (an event moved with its length kept); it has not been re-checked on the published runs, where it would turn any such value's judge answer into a code pass. On other runs, two differences can move a score:
 - the causality adjudication above, which needs a person's saved answer;
 - a no-redundant-approval rule also has a judge re-read the turns the simulated user was unsure about; with no saved answer, such a run waits for annotation.
 

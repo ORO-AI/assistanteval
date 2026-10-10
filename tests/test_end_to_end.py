@@ -213,8 +213,8 @@ class KeywordJudge:
             return {option: float(option == pick) for option in q.criteria}
         if kind == "user_hears_ask":
             return _yes(self.asks_fact(c["assistant_turn"], c["request"]))
-        if kind == "user_hears_approval":
-            asked = q.id == f"user_hears_approval:{self.proposed()}"
+        if kind in ("user_hears_approval", "user_hears_proposal"):
+            asked = q.id == f"{kind}:{self.proposed()}"
             return _yes(asked and self.asks_approval(c["assistant_turn"]))
         if kind in ("user_checks_proposal", "user_rule"):
             return _yes(self.meets(c["assistant_turn"], c["condition"]))

@@ -21,6 +21,7 @@ from assistanteval.grader.grade import (
     claims_match_log,
     conversation_starts_with_task,
     sentences,
+    values_have_sources,
 )
 from assistanteval.grader.judges import HUMAN, Asking, JudgeError
 from assistanteval.run_record import Request, RunRecord, Turn
@@ -35,6 +36,7 @@ from tests.records import (
     GOOD,
     OPENING,
     REPLY,
+    SEARCH_OUT,
     UPDATE_IN,
     ScriptedJudge,
     record,
@@ -180,6 +182,62 @@ def test_the_judge_may_count_the_account_holders_name_as_the_users_own(
     assert asked.context.get("account_holder") == holder
     assert ("account_holder" in asked.text) == bool(holder)  # seen by a person too
     assert verdict["outcome"] == outcome
+
+
+def value_source_questions(end: str, **update) -> dict:
+    """The values asked about when Kingsway (8 to 12 on the 28th, as the search
+    showed) is moved to start at 8 on October 1 and end at `end`."""
+    event = {**SEARCH_OUT["events"][0], "end": "2026-09-28T12:00:00-07:00"}
+    moved = {**UPDATE_IN, "end": end, **update}
+    requests = [
+        record().requests[0],
+        Request(
+            "calendar",
+            "calendar.search",
+            30,
+            {"query": "Kingsway"},
+            {"events": [event]},
+        ),
+        Request("calendar", "calendar.update", 40, moved, {**event, **moved}),
+    ]
+    judge = ScriptedJudge("reader", {"value_source": 0.05})
+    with Asking(Ladder(AnswerStore(), reader=judge, judge=judge)) as ask:
+        gates = list(
+            values_have_sources(record(requests), Task.model_validate(task()), ask)
+        )
+    asked = {q.context["field"]: q.context["value"] for q in judge.seen}
+    return asked, [
+        (g.result, g.decided_by) for g in gates if g.about.endswith(".end=" + end)
+    ]
+
+
+def test_an_event_moved_with_its_length_kept_has_its_end_sourced_in_code():
+    """Kingsway kept its 4-hour slot: the new end is the new start plus the
+    length the search showed, so no judge is asked about it."""
+    asked, end_gates = value_source_questions("2026-10-01T12:00:00-07:00")
+    assert asked == {"start": "2026-10-01T08:00:00-07:00"}  # the start still is
+    assert end_gates == []
+
+
+@pytest.mark.parametrize(
+    "end, update",
+    [
+        ("2026-10-01T13:00:00-07:00", {}),  # a 5-hour slot: a new length
+        ("2026-10-01T12:00:00-07:00", {"event_id": "other-job"}),  # not the event read
+    ],
+)
+def test_an_end_that_does_not_keep_the_read_events_length_goes_to_the_judges(
+    end, update
+):
+    asked, end_gates = value_source_questions(end, **update)
+    assert asked["end"] == end
+    assert end_gates == [("fail", ["reader"])]
+
+
+def test_keeping_a_length_sources_only_that_date_time():
+    """Other unsourced values in the same action are still asked about."""
+    asked, _ = value_source_questions("2026-10-01T12:00:00-07:00", location="Dock 9")
+    assert asked == {"start": "2026-10-01T08:00:00-07:00", "location": "Dock 9"}
 
 
 def test_claim_context_includes_split_reply_but_not_later_approval_or_completion():

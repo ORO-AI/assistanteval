@@ -64,6 +64,16 @@
         "id": "gift_choice",
         "value": "You pick, anything nice under $60 is fine.",
         "reveal_when": "the assistant asks which gift to send, or asks Priya to choose between options"
+      },
+      {
+        "id": "payment_method",
+        "value": "use the card that's already saved",
+        "reveal_when": "the assistant asks which payment method to use or says a payment method is missing"
+      },
+      {
+        "id": "birthday_calendar",
+        "value": "You have my calendar.",
+        "reveal_when": "the assistant asks when Jordan's birthday is"
       }
     ],
     "approvals": [

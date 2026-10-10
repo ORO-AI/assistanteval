@@ -29,7 +29,7 @@ class ScriptedJev:
             turn = q.context["assistant_turn"].lower()
             asks = ("is the rain cover", "does the rain cover")
             return 0.95 if any(phrase in turn for phrase in asks) else 0.05
-        if q.id.startswith("user_hears_approval:"):
+        if q.id.startswith(("user_hears_approval:", "user_hears_proposal:")):
             return (
                 0.95 if "shall i send" in q.context["assistant_turn"].lower() else 0.05
             )
@@ -244,8 +244,10 @@ class HearsTheDecline:
         turn = q.context["assistant_turn"].lower()
         if q.id.startswith("user_hears_ask:"):
             return 0.95 if "declined" in turn else 0.05
-        if q.id.startswith("user_hears_approval:"):
+        if q.id.startswith(("user_hears_approval:", "user_hears_proposal:")):
             return 0.05
+        if q.id == "user_hears_offer":
+            return 0.95 if "want the receipt" in turn else 0.05
         if q.id == "user_reads_turn":
             pick = "asks_other" if "?" in turn else "finished"
             return {option: float(option == pick) for option in q.criteria}
@@ -268,7 +270,9 @@ def test_a_later_report_of_the_decline_does_not_resend_the_card():
             4,
         ),
     ]
-    assert user.reply(turns, at_ms=5).decision["action"] == "dont_know"
+    # An offer of more help gets a no, not the card again.
+    later = user.reply(turns, at_ms=5)
+    assert (later.action, later.decision["fact_ids"]) == ("decline", [])
 
 
 def test_finished_ends_the_run_and_nudge_is_recorded():
@@ -415,3 +419,50 @@ def test_a_rule_that_answers_no_refuses_with_its_reason():
         "refuse",
         "no need to put it in my calendar",
     )
+
+
+class MissesTheOffer:
+    """Picks "asks something else" for a conditional offer that the proposal
+    question, in the grader's words, reads as asking to send the reply."""
+
+    def __call__(self, q):
+        if q.id.startswith(("user_hears_ask:", "user_hears_approval:")):
+            return 0.05
+        if q.id == "user_reads_turn":
+            return {option: float(option == "asks_other") for option in q.criteria}
+        if q.id == "user_hears_proposal:marketplace.reply":
+            return 0.95
+        if q.id == "user_checks_proposal":
+            return 0.05  # the draft does not keep the user's terms
+        raise AssertionError(q.id)
+
+
+def test_an_offer_the_reader_misses_gets_the_rules_answer_not_i_dont_know():
+    user = SimulatedUser(TASK, MissesTheOffer())
+    turns = conversation("Do you still want me to tell Anita $180 works?")
+    reply = user.reply(turns, at_ms=5)
+    assert (reply.action, reply.decision["operation"]) == (
+        "refuse",
+        "marketplace.reply",
+    )
+    assert reply.decision["saw"] == "asks_approval:marketplace.reply"
+
+
+def test_the_grader_checks_a_decline_as_it_checks_i_dont_know():
+    """A decline is wrong only if the turn asked for a fact the user holds or
+    proposed an action with a rule: the same re-read as "i don't know"."""
+    from assistanteval.grader.grade import _read_checks
+    from assistanteval.task import Task
+
+    task = Task.model_validate(TASK)
+    turns = conversation("Done. Anything else I can help with?")
+    record = RunRecord("r", TASK["id"], "p", turns, [], {}, task=TASK)
+    decline = {"after_turn": 1, "action": "decline", "fact_ids": []}
+    dont_know = {**decline, "action": "dont_know"}
+    asked = [
+        q.context["requests"] for q, _, _ in _read_checks(record, task, decline, 0)
+    ]
+    assert asked == [
+        q.context["requests"] for q, _, _ in _read_checks(record, task, dont_know, 0)
+    ]
+    assert asked and asked[0]
