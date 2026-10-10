@@ -11,3 +11,8 @@ __pycache__/
 .ruff_cache/
 .coverage
 *.json.lock
+# Experiment data drawn from published runs: kept local (data terms)
+experiments/styles/corpus*.json
+experiments/styles/raw*.jsonl
+experiments/styles/audit*.json
+experiments/styles/*.log

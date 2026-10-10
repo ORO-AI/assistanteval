@@ -1386,6 +1386,14 @@ def _measures(record: RunRecord, private: list[tuple[Request, Decision]]) -> dic
     }
 
 
+def _queued(d) -> dict:
+    """A decision for the annotation queue; a checker's answer only if one was asked."""
+    out = asdict(d)
+    if out.get("checker") is None:
+        out.pop("checker", None)
+    return out
+
+
 def grade(record: RunRecord, ladder: Ladder) -> dict:
     """Grade the task the record holds."""
     task = Task.model_validate(record.task)
@@ -1445,6 +1453,6 @@ def grade(record: RunRecord, ladder: Ladder) -> dict:
         # A run already invalid in code is never scored: nothing to ask a person.
         "annotation_queue": []
         if invalid
-        else [asdict(d) for d in decisions if d.decided_by == "needs_human_annotation"]
-        + [asdict(d) for d in disputed],
+        else [_queued(d) for d in decisions if d.decided_by == "needs_human_annotation"]
+        + [_queued(d) for d in disputed],
     }

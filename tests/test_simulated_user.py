@@ -466,3 +466,26 @@ def test_the_grader_checks_a_decline_as_it_checks_i_dont_know():
         q.context["requests"] for q, _, _ in _read_checks(record, task, dont_know, 0)
     ]
     assert asked and asked[0]
+
+
+class Recording:
+    model = "recording"
+
+    def __init__(self):
+        self.systems = []
+
+    def __call__(self, system, user):
+        self.systems.append(system)
+        return "yes go ahead and send the reply"
+
+
+def test_a_style_changes_only_the_writers_prompt_and_is_recorded():
+    from assistanteval.simulated_user import REWRITE, STYLES
+
+    writer = Recording()
+    user = SimulatedUser(TASK, ScriptedJev(), writer, style="terse")
+    user._voice(conversation("Shall I send it?"), "yes, go ahead and send a reply")
+    assert REWRITE in writer.systems[0] and STYLES["terse"] in writer.systems[0]
+    assert user.record()["style"] == "terse"
+    with pytest.raises(ValueError, match="style must be one of"):
+        SimulatedUser(TASK, ScriptedJev(), style="frustrated")

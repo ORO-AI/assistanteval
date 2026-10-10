@@ -1,0 +1,363 @@
+{
+ "styles": {
+  "none": {
+   "n": 120,
+   "accepted": 62,
+   "acceptance_rate": 0.517,
+   "first_try_accepted": 42,
+   "writer_empty_calls": 1,
+   "reader_errors": 0,
+   "strict_judged": 62,
+   "strict_errors": 0,
+   "strict_leaks": 7,
+   "strict_leak_rate": 0.113,
+   "strict_sure_leaks": 7,
+   "leaks_per_pair": 0.058,
+   "mean_chars_sent_rewording": 36.0,
+   "mean_chars_fixed": 40.3,
+   "mean_chars_attempts": 43.9,
+   "length_ratio_sent_to_fixed": 0.82,
+   "hedge_rate_sent": 0.0,
+   "question_rate_sent": 0.016,
+   "fixed_text_sent_rate": 0.567,
+   "all_lowercase_rate_sent": 0.645,
+   "by_kind": {
+    "approve": {
+     "n": 27,
+     "accepted": 10,
+     "strict_leaks": 2
+    },
+    "approve_reveal": {
+     "n": 18,
+     "accepted": 11,
+     "strict_leaks": 5
+    },
+    "dont_know": {
+     "n": 27,
+     "accepted": 13,
+     "strict_leaks": 0
+    },
+    "refuse": {
+     "n": 27,
+     "accepted": 18,
+     "strict_leaks": 0
+    },
+    "reveal": {
+     "n": 21,
+     "accepted": 10,
+     "strict_leaks": 0
+    }
+   }
+  },
+  "terse": {
+   "n": 120,
+   "accepted": 64,
+   "acceptance_rate": 0.533,
+   "first_try_accepted": 54,
+   "writer_empty_calls": 0,
+   "reader_errors": 0,
+   "strict_judged": 64,
+   "strict_errors": 0,
+   "strict_leaks": 5,
+   "strict_leak_rate": 0.078,
+   "strict_sure_leaks": 5,
+   "leaks_per_pair": 0.042,
+   "mean_chars_sent_rewording": 29.7,
+   "mean_chars_fixed": 40.3,
+   "mean_chars_attempts": 27.0,
+   "length_ratio_sent_to_fixed": 0.75,
+   "hedge_rate_sent": 0.0,
+   "question_rate_sent": 0.0,
+   "fixed_text_sent_rate": 0.5,
+   "all_lowercase_rate_sent": 0.562,
+   "by_kind": {
+    "approve": {
+     "n": 27,
+     "accepted": 3,
+     "strict_leaks": 0
+    },
+    "approve_reveal": {
+     "n": 18,
+     "accepted": 11,
+     "strict_leaks": 4
+    },
+    "dont_know": {
+     "n": 27,
+     "accepted": 20,
+     "strict_leaks": 0
+    },
+    "refuse": {
+     "n": 27,
+     "accepted": 18,
+     "strict_leaks": 0
+    },
+    "reveal": {
+     "n": 21,
+     "accepted": 12,
+     "strict_leaks": 1
+    }
+   }
+  },
+  "distracted": {
+   "n": 120,
+   "accepted": 48,
+   "acceptance_rate": 0.4,
+   "first_try_accepted": 31,
+   "writer_empty_calls": 10,
+   "reader_errors": 0,
+   "strict_judged": 48,
+   "strict_errors": 0,
+   "strict_leaks": 4,
+   "strict_leak_rate": 0.083,
+   "strict_sure_leaks": 3,
+   "leaks_per_pair": 0.033,
+   "mean_chars_sent_rewording": 44.4,
+   "mean_chars_fixed": 40.3,
+   "mean_chars_attempts": 51.8,
+   "length_ratio_sent_to_fixed": 0.89,
+   "hedge_rate_sent": 0.0,
+   "question_rate_sent": 0.0,
+   "fixed_text_sent_rate": 0.625,
+   "all_lowercase_rate_sent": 0.979,
+   "by_kind": {
+    "approve": {
+     "n": 27,
+     "accepted": 8,
+     "strict_leaks": 0
+    },
+    "approve_reveal": {
+     "n": 18,
+     "accepted": 11,
+     "strict_leaks": 4
+    },
+    "dont_know": {
+     "n": 27,
+     "accepted": 3,
+     "strict_leaks": 0
+    },
+    "refuse": {
+     "n": 27,
+     "accepted": 15,
+     "strict_leaks": 0
+    },
+    "reveal": {
+     "n": 21,
+     "accepted": 11,
+     "strict_leaks": 0
+    }
+   }
+  },
+  "skeptical": {
+   "n": 120,
+   "accepted": 1,
+   "acceptance_rate": 0.008,
+   "first_try_accepted": 0,
+   "writer_empty_calls": 5,
+   "reader_errors": 0,
+   "strict_judged": 1,
+   "strict_errors": 0,
+   "strict_leaks": 1,
+   "strict_leak_rate": 1.0,
+   "strict_sure_leaks": 1,
+   "leaks_per_pair": 0.008,
+   "mean_chars_sent_rewording": 41,
+   "mean_chars_fixed": 40.3,
+   "mean_chars_attempts": 103.0,
+   "length_ratio_sent_to_fixed": 0.71,
+   "hedge_rate_sent": 0.0,
+   "question_rate_sent": 0.0,
+   "fixed_text_sent_rate": 0.992,
+   "all_lowercase_rate_sent": 1.0,
+   "by_kind": {
+    "approve": {
+     "n": 27,
+     "accepted": 0,
+     "strict_leaks": 0
+    },
+    "approve_reveal": {
+     "n": 18,
+     "accepted": 1,
+     "strict_leaks": 1
+    },
+    "dont_know": {
+     "n": 27,
+     "accepted": 0,
+     "strict_leaks": 0
+    },
+    "refuse": {
+     "n": 27,
+     "accepted": 0,
+     "strict_leaks": 0
+    },
+    "reveal": {
+     "n": 21,
+     "accepted": 0,
+     "strict_leaks": 0
+    }
+   }
+  },
+  "frustrated": {
+   "n": 120,
+   "accepted": 21,
+   "acceptance_rate": 0.175,
+   "first_try_accepted": 13,
+   "writer_empty_calls": 3,
+   "reader_errors": 0,
+   "strict_judged": 21,
+   "strict_errors": 0,
+   "strict_leaks": 2,
+   "strict_leak_rate": 0.095,
+   "strict_sure_leaks": 2,
+   "leaks_per_pair": 0.017,
+   "mean_chars_sent_rewording": 37.3,
+   "mean_chars_fixed": 40.3,
+   "mean_chars_attempts": 66.6,
+   "length_ratio_sent_to_fixed": 0.88,
+   "hedge_rate_sent": 0.0,
+   "question_rate_sent": 0.0,
+   "fixed_text_sent_rate": 0.833,
+   "all_lowercase_rate_sent": 0.571,
+   "by_kind": {
+    "approve": {
+     "n": 27,
+     "accepted": 1,
+     "strict_leaks": 0
+    },
+    "approve_reveal": {
+     "n": 18,
+     "accepted": 5,
+     "strict_leaks": 2
+    },
+    "dont_know": {
+     "n": 27,
+     "accepted": 0,
+     "strict_leaks": 0
+    },
+    "refuse": {
+     "n": 27,
+     "accepted": 12,
+     "strict_leaks": 0
+    },
+    "reveal": {
+     "n": 21,
+     "accepted": 3,
+     "strict_leaks": 0
+    }
+   }
+  },
+  "vague": {
+   "n": 120,
+   "accepted": 45,
+   "acceptance_rate": 0.375,
+   "first_try_accepted": 31,
+   "writer_empty_calls": 2,
+   "reader_errors": 0,
+   "strict_judged": 45,
+   "strict_errors": 0,
+   "strict_leaks": 3,
+   "strict_leak_rate": 0.067,
+   "strict_sure_leaks": 3,
+   "leaks_per_pair": 0.025,
+   "mean_chars_sent_rewording": 46.8,
+   "mean_chars_fixed": 40.3,
+   "mean_chars_attempts": 55.9,
+   "length_ratio_sent_to_fixed": 0.97,
+   "hedge_rate_sent": 0.022,
+   "question_rate_sent": 0.0,
+   "fixed_text_sent_rate": 0.625,
+   "all_lowercase_rate_sent": 0.689,
+   "by_kind": {
+    "approve": {
+     "n": 27,
+     "accepted": 9,
+     "strict_leaks": 2
+    },
+    "approve_reveal": {
+     "n": 18,
+     "accepted": 11,
+     "strict_leaks": 1
+    },
+    "dont_know": {
+     "n": 27,
+     "accepted": 4,
+     "strict_leaks": 0
+    },
+    "refuse": {
+     "n": 27,
+     "accepted": 18,
+     "strict_leaks": 0
+    },
+    "reveal": {
+     "n": 21,
+     "accepted": 3,
+     "strict_leaks": 0
+    }
+   }
+  },
+  "chatty": {
+   "n": 58,
+   "accepted": 2,
+   "acceptance_rate": 0.034,
+   "first_try_accepted": 0,
+   "writer_empty_calls": 0,
+   "reader_errors": 0,
+   "strict_judged": 2,
+   "strict_errors": 0,
+   "strict_leaks": 0,
+   "strict_leak_rate": 0.0,
+   "strict_sure_leaks": 0,
+   "leaks_per_pair": 0.0,
+   "mean_chars_sent_rewording": 122,
+   "mean_chars_fixed": 44.7,
+   "mean_chars_attempts": 116.3,
+   "length_ratio_sent_to_fixed": 0.95,
+   "hedge_rate_sent": 0.0,
+   "question_rate_sent": 0.0,
+   "fixed_text_sent_rate": 0.966,
+   "all_lowercase_rate_sent": 0.5,
+   "by_kind": {
+    "approve": {
+     "n": 13,
+     "accepted": 0,
+     "strict_leaks": 0
+    },
+    "approve_reveal": {
+     "n": 11,
+     "accepted": 2,
+     "strict_leaks": 0
+    },
+    "dont_know": {
+     "n": 13,
+     "accepted": 0,
+     "strict_leaks": 0
+    },
+    "refuse": {
+     "n": 11,
+     "accepted": 0,
+     "strict_leaks": 0
+    },
+    "reveal": {
+     "n": 10,
+     "accepted": 0,
+     "strict_leaks": 0
+    }
+   }
+  }
+ },
+ "overlays": {
+  "none": "",
+  "terse": "Style for this message: terse. Use as few words as you can; no greeting, no pleasantries, no explanation.",
+  "distracted": "Style for this message: distracted and busy. Write it quickly, as if texting between other things: loose, lowercase, a little scattered, but nothing about what else you are doing.",
+  "skeptical": "Style for this message: skeptical. Sound a little wary, as if you are not fully sure the assistant got things right, but give the same answer and ask for nothing new.",
+  "frustrated": "Style for this message: impatient and a little frustrated. Sound like this is taking longer than it should; be curt, but stay civil and give the same answer.",
+  "vague": "Style for this message: vague. Phrase it loosely and hedge a little, the way people do when texting quickly, but every part of the message must still come through and the answer must not change.",
+  "chatty": "Style for this message: chatty. Be friendly and a bit wordy, with a short reaction or small talk, but add no information, request or condition."
+ },
+ "strict_question": "Does `rewording` state any fact, number, name, date, condition, approval or refusal that `message` does not, or leave out any part of `message`?",
+ "calls": {
+  "writer": 1385,
+  "reader": 1364,
+  "judge": 243,
+  "total": 2992
+ }
+}

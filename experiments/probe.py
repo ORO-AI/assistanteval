@@ -77,6 +77,14 @@ def published(run_id: str) -> tuple[dict, list[Turn], dict]:
     return task, turns, {"assistant": r["assistant"], "outcome": r["outcome"]}
 
 
+def recorded(path: str) -> tuple[dict, list[Turn], dict]:
+    """A full run record's task, turns and summary (our own runs)."""
+    from assistanteval import run_record
+
+    r = run_record.load(Path(path))
+    return r.task, r.turns, {"assistant": r.product, "outcome": None}
+
+
 def overlay(task: dict, tasks_dir: Path | None) -> dict:
     """The task with the facts its repo file has and it lacks."""
     if tasks_dir is None:
@@ -140,7 +148,10 @@ class Cached:
 
 
 def replay(item: dict, reader, rules, ask, tasks_dir) -> list[dict]:
-    task, turns, meta = published(item["run"])
+    task, turns, meta = (
+        recorded(item["record"]) if "record" in item else published(item["run"])
+    )
+    item.setdefault("run", item.get("record"))
     task = overlay(task, tasks_dir)
     user = SimulatedUser(task, reader, None, rules=rules)
     rows = []
@@ -155,7 +166,7 @@ def replay(item: dict, reader, rules, ask, tasks_dir) -> list[dict]:
         except Exception as exc:  # a judge failure: record it, keep going
             rows.append({"run": item["run"], "point": i, "error": type(exc).__name__})
             break
-        recorded = turns[i].text if i < len(turns) else None
+        sent = turns[i].text if i < len(turns) else None
         rows.append(
             {
                 "run": item["run"],
@@ -166,8 +177,8 @@ def replay(item: dict, reader, rules, ask, tasks_dir) -> list[dict]:
                 "action": d["action"],
                 "fact_ids": d["fact_ids"],
                 "operation": d["operation"],
-                "recorded_reply": recorded,
-                "recorded_dont_know": bool(recorded and DONT_KNOW.search(recorded)),
+                "recorded_reply": sent,
+                "recorded_dont_know": bool(sent and DONT_KNOW.search(sent)),
                 "assistant_turn": seen[-1].text[-600:] if seen else "",
             }
         )
@@ -202,14 +213,27 @@ def replay(item: dict, reader, rules, ask, tasks_dir) -> list[dict]:
     by_turn = {}
     for j, d in enumerate(decided):
         results = []
+        unresolved = []
         for q, confirms, fut in checks[j]:
             v = fut.result().value
             results.append(
                 "unsure" if v is None else ("agree" if v is confirms else "disagree")
             )
-        by_turn[d["after_turn"]] = results
+            if v is not confirms:
+                unresolved.append(
+                    {
+                        "id": q.id,
+                        "kind": q.kind,
+                        "text": q.text,
+                        "context": q.context,
+                        "criteria": q.criteria,
+                        "rungs": list(q.rungs),
+                        "confirms": confirms,
+                    }
+                )
+        by_turn[d["after_turn"]] = (results, unresolved)
     for row in rows:
-        row["grader"] = by_turn.get(row["point"] - 1, [])
+        row["grader"], row["unresolved"] = by_turn.get(row["point"] - 1, ([], []))
     return rows
 
 
@@ -219,7 +243,9 @@ def run(args) -> int:
     reader = Cached(judge_for(endpoint("READER")), cache)
     rules = Cached(judge_for(required("JUDGE")), cache)
     store = AnswerStore(DATA / "grader-answers.json")
-    ladder = Ladder(store, reader=reader, judge=rules)
+    checker = endpoint("CHECKER")  # only code with a checker rung takes one
+    extra = {"checker": Cached(judge_for(checker), cache)} if checker else {}
+    ladder = Ladder(store, reader=reader, judge=rules, **extra)
     tasks_dir = Path(args.overlay) if args.overlay else None
     rows = []
     with Asking(ladder) as ask, ThreadPoolExecutor(args.workers) as pool:

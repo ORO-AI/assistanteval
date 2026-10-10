@@ -2118,3 +2118,37 @@ def test_an_end_state_selector_value_may_contain_dots():
 
     state = {"sent": [{"recipient": "ben@example.com", "subject": "Monday"}]}
     assert _resolve(state, "sent[recipient=ben@example.com].subject") == "Monday"
+
+
+class Fixed:
+    """A judge that answers every question with the same probability."""
+
+    def __init__(self, p, name):
+        self.p, self.name, self.model = p, name, name
+
+    def __call__(self, q):
+        return self.p
+
+
+def test_a_checker_answers_a_recheck_the_reader_is_unsure_of():
+    """A re-check that leaves the judge out goes to the CHECKER, if set,
+    before a person; other questions never reach it."""
+    recheck = Question(
+        "user_rule:0", "yes_no", "Does it meet `condition`?", {}, rungs=("reader",)
+    )
+    plain = Question("q", "yes_no", "Is it so?", {})
+    unsure, sure = Fixed(0.5, "reader"), Fixed(0.9, "checker")
+    without = Ladder(AnswerStore(), reader=unsure, judge=Fixed(0.1, "judge"))
+    assert without.decide_one(recheck).decided_by == "needs_human_annotation"
+    ladder = Ladder(
+        AnswerStore(), reader=unsure, judge=Fixed(0.1, "judge"), checker=sure
+    )
+    decided = ladder.decide_one(recheck)
+    assert (decided.value, decided.decided_by, decided.checker) == (
+        True,
+        "checker",
+        0.9,
+    )
+    assert ladder.decide_one(plain).decided_by == "judge"
+    assert ladder.models()["checker"] == "checker"
+    assert "checker" not in without.models()

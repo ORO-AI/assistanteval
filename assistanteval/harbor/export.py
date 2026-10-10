@@ -11,7 +11,7 @@ Each task becomes a directory Harbor runs with AssistantEval's simulated user
   (`assistanteval.remote`); ``task.toml`` lists each task service as an MCP
   server, which Harbor registers with the harness.
 - ``tests/``: a separate verifier image that grades the run record the user
-  agent uploads, with the JUDGE and READER roles passed from the host.
+  agent uploads, with the JUDGE, READER and CHECKER roles passed from the host.
 
 Only runnable tasks export; a folder's others are skipped. Both images
 install AssistantEval from the wheel, built from this checkout
@@ -111,7 +111,7 @@ def task_toml(task: dict) -> str:
     )
     judges = "".join(
         f'{name} = "${{{name}:-}}"\n'
-        for role in ("JUDGE", "READER")
+        for role in ("JUDGE", "READER", "CHECKER")
         for name in (f"ASSISTANTEVAL_{role}_{s}" for s in endpoints.SETTINGS)
     )
     return f"""\

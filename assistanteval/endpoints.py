@@ -23,6 +23,9 @@ The roles:
 - ``WRITER``: rewords the simulated user's fixed replies in the persona's
   voice. Unset, the fixed replies are sent as they are.
 - ``BASELINE``: the model in the model baseline assistant.
+- ``CHECKER``: optional, a model other than the JUDGE. The grader re-checks the
+  simulated user's approval-rule decisions, which the judge made, with the
+  reader; when the reader is unsure, the checker answers before a person does.
 
 Records keep each role's model, API and base URL, never its key.
 """
@@ -33,7 +36,7 @@ import json
 import os
 from dataclasses import dataclass, field
 
-ROLES = ("READER", "JUDGE", "WRITER", "BASELINE")
+ROLES = ("READER", "JUDGE", "WRITER", "BASELINE", "CHECKER")
 SETTINGS = ("MODEL", "BASE_URL", "API_KEY", "API", "EXTRA_BODY")
 
 

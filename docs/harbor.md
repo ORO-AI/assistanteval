@@ -23,7 +23,7 @@ uv run harbor run -p harbor-tasks/kingsway-reschedule-crew \
     --user-agent assistanteval.harbor.user:SimulatedUserAgent --bridge acp --yes
 ```
 
-The harness's own credentials follow Harbor's rules for that agent (for Hermes: a native provider key such as `ANTHROPIC_API_KEY` with `anthropic/<model>`, else `OPENROUTER_API_KEY` with an OpenRouter model id). `--yes` confirms passing the JUDGE and READER settings to the verifier, which grades in its own container.
+The harness's own credentials follow Harbor's rules for that agent (for Hermes: a native provider key such as `ANTHROPIC_API_KEY` with `anthropic/<model>`, else `OPENROUTER_API_KEY` with an OpenRouter model id). `--yes` confirms passing the JUDGE, READER and CHECKER settings to the verifier, which grades in its own container.
 
 ## What a trial does
 

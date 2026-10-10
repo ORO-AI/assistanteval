@@ -93,6 +93,7 @@ def simulated_user(task: dict):
         judge_for(endpoint("READER")) or judge,
         writer and LLMWriter(writer),
         rules=judge,
+        style=os.environ.get("ASSISTANTEVAL_USER_STYLE") or None,
     )
 
 
