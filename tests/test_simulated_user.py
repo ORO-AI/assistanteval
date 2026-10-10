@@ -489,3 +489,27 @@ def test_a_style_changes_only_the_writers_prompt_and_is_recorded():
     assert user.record()["style"] == "terse"
     with pytest.raises(ValueError, match="style must be one of"):
         SimulatedUser(TASK, ScriptedJev(), style="frustrated")
+
+
+class SplitOnAnOffer:
+    """Unsure whether the turn finished or asked something; sure it offers more help."""
+
+    def __call__(self, q):
+        if q.id.startswith(
+            ("user_hears_ask:", "user_hears_approval:", "user_hears_proposal:")
+        ):
+            return 0.05
+        if q.id == "user_reads_turn":
+            split = {"asks_other": 0.5, "finished": 0.5}
+            return {option: split.get(option, 0.0) for option in q.criteria}
+        if q.id == "user_hears_offer":
+            return 0.95
+        raise AssertionError(q.id)
+
+
+def test_an_offer_the_reader_cannot_place_gets_a_decline():
+    turns = conversation(
+        "Done. If you'd rather keep it for Kyle, tell me and I'll ask him."
+    )
+    reply = SimulatedUser(TASK, SplitOnAnOffer()).reply(turns, at_ms=5)
+    assert reply.action == "decline" and reply.decision["saw"].startswith("unsure:")

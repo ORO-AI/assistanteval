@@ -200,7 +200,17 @@ class SimulatedUser:
         if not sure:
             # Neither judge could tell what the turn does: "i don't know"
             # keeps the conversation going; it never ends the run, approves
-            # anything or reveals a fact on a guess.
+            # anything or reveals a fact on a guess. An offer of more help it
+            # can turn down ("tell me if you'd rather X") gets a decline.
+            if self._offers_more(turns, assistant_turn):
+                return self._decide(
+                    after,
+                    at_ms,
+                    f"unsure:{saw}",
+                    "decline",
+                    FIXED["decline"],
+                    turns=turns,
+                )
             return self._decide(
                 after,
                 at_ms,

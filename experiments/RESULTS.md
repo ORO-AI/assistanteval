@@ -46,10 +46,12 @@ outcomes and 131/132 gates. The weak spot is the simulated user:
 | Arm | "i don't know" | Declines | Disputed | Disagree | Unsure |
 |---|---|---|---|---|---|
 | Published code | 113 (4.5%) | 0 | 142 (5.6%) | 84 | 58 |
-| This branch | **76 (3.0%)** | 29 | 142 (5.6%) | 82 | 60 |
+| This branch | **75 (3.0%)** | 30 | 142 (5.6%) | 82 | 60 |
 | This branch + CHECKER (Gemini 3.1 Pro) | 76 (3.0%) | 29 | **90 (3.6%)** | 86 | 4 |
 
-1. **Decline offers of more help.** The user answers an offer of optional
+1. **Decline offers of more help**, also when the reader cannot tell whether
+   the turn finished (a live Hermes run ended "if you'd rather have the debrief
+   on Monday, tell me and I'll ask Ben"). The user answers an offer of optional
    further help with "no thanks, that's all for now" instead of "i don't
    know". The grader checks a decline as it checks "i don't know" (wrong only
    if the turn asked for a fact the user holds or proposed an action with a
