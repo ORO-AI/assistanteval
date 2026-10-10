@@ -113,6 +113,40 @@ every measure moves the expected way. No assistant offered more help in these
 runs, so no decline was sent. An earlier arm with the reader-only routing
 measured 3/33 "i don't know" and 6/32 disputed runs.
 
+## Impact on scores
+
+- **Bound.** In the replay, 37 of the 1,495 published runs have a user
+  decision version 2 makes differently (at most 9 per assistant, 5.5% of
+  Muse's runs); every other run's conversation is unchanged up to its end.
+- **Model assistants, live.** The five published model assistants (same model
+  ids and harness as the published runs) on the 12 tasks where those 37 runs
+  fall, three times each, with the published simulated user and with
+  version 2 (180 runs per arm):
+
+| | Published user | Version 2 |
+|---|---|---|
+| Pass rate (95% interval) | 64.8% [57.1%, 71.8%] | 65.0% [57.3%, 72.0%] |
+| Waiting for a person | 21 | 20 |
+| "i don't know" / user replies | 7/98 | 2/89 |
+| User replies sent reworded | 66% | 74% |
+
+  Per model, the differences (-4 to +5 points on about 30 scored runs each)
+  are within run-to-run noise. Version 2 changes the conversation, not what the
+  scores measure. Regraded with the CHECKER, runs waiting for a person go
+  from 21 to 17 and 20 to 17; nearly all that remain wait on the question only
+  a person decides (whether a result holds despite the simulated user's
+  misreadings), and pass rates stay at 65.0% and 65.6%.
+- **Published records.** On the 1,530 full published records, this grader
+  reproduces all 918 published outcomes of trials 3-5 from the published
+  answers (once the person-only question's answers, whose keys embed the old
+  judge names, are re-keyed); trials 1-2 could not be checked, as their saved
+  answers are not in the release. With the published adjudications removed, the
+  CHECKER agreed with 31 of the 34 it could answer. Most adjudications overruled
+  a confident model answer, which no checker revisits, so it complements review
+  rather than replacing it.
+- **Products** (Muse, Pally, Grok Bot): 20 of the 37 affected runs; measuring
+  them needs the internal product fleet on this simulated user.
+
 ## Hermes in Harbor
 
 Three live Hermes Agent trials (Claude Sonnet 5.5) with simulated user
