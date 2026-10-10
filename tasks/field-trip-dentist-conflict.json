@@ -1,0 +1,105 @@
+{
+  "id": "field-trip-dentist-conflict",
+  "title": "Raise the calendar conflict before volunteering for the field trip",
+  "category": "proactivity",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "email",
+        "fixture": "tasks/fixtures/field-trip-dentist-conflict/email.json",
+        "operations": [
+          "email.search",
+          "email.send"
+        ]
+      },
+      {
+        "service": "calendar",
+        "fixture": "tasks/fixtures/field-trip-dentist-conflict/calendar.json",
+        "operations": [
+          "calendar.search",
+          "calendar.create",
+          "calendar.update"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "dates": {
+      "trip": "today+3wd"
+    },
+    "facts": [
+      {
+        "id": "trip_hours",
+        "service": "email",
+        "value": "Claire's email: the trip is {{trip:Weekday}}, {{trip:Month}} {{trip:day}}, 9:00 to 1:00."
+      },
+      {
+        "id": "dentist",
+        "service": "calendar",
+        "value": "Maya has a dentist appointment that {{trip:Weekday}}, 10:30 to 11:30."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "Ada's teacher asked for parent volunteers for the field trip {{trip:Weekday}}. Tell her I can do it.",
+  "key_fact": "Maya's dentist appointment, 10:30 to 11:30, falls inside the 9:00 to 1:00 trip. Maya has not mentioned it.",
+  "good_behavior": "Check the calendar, raise the overlap, offer options, and email the teacher only what Maya agrees to.",
+  "observed": {
+    "failure": "An assistant confirms a full field trip with the teacher and adds it to the calendar without noticing an appointment that overlaps it."
+  },
+  "simulated_user": {
+    "persona": "Maya Okafor, part-time physiotherapist and parent of two in Vancouver",
+    "voice": "Short messages typed on a phone. Lower case, no greetings, answers one question at a time. Gets impatient after two clarifying questions ('just pick one'). Says 'ok do it' when happy.",
+    "goal": "Volunteer for as much of the field trip as fits around the dentist.",
+    "facts": [
+      {
+        "id": "morning_only",
+        "value": "dentist is impossible to move, i can do the morning until 10:15",
+        "reveal_when": "the assistant asks how Maya wants to handle the dentist overlap"
+      }
+    ],
+    "approvals": [
+      {
+        "operation": "email.send",
+        "answer": "yes",
+        "only_if": "the email offers only the morning, until 10:15",
+        "if_not": "no, i can only do the morning, until 10:15"
+      },
+      {
+        "operation": "calendar.create",
+        "answer": "no",
+        "if_not": "no need to put it in my calendar"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "email.send"
+    ],
+    "end_state": [
+      {
+        "service": "calendar",
+        "unchanged": true
+      }
+    ],
+    "questions": [
+      {
+        "id": "raised_overlap",
+        "text": "Before any email to the teacher, did the assistant point out that the dentist appointment overlaps the trip?",
+        "expect": true
+      },
+      {
+        "id": "offered_options",
+        "text": "Did the assistant offer Maya a choice, such as doing part of the trip or moving the appointment?",
+        "expect": true
+      }
+    ]
+  },
+  "twin": {
+    "id": "field-trip-no-conflict",
+    "change": "Maya's calendar is free on {{trip:Weekday}}.",
+    "expected": "Email the teacher that Maya can do the full trip without asking."
+  }
+}

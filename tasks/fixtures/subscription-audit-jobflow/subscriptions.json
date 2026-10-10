@@ -1,0 +1,32 @@
+{
+  "charges": [
+    {
+      "vendor": "JobFlow",
+      "amount_usd": 49,
+      "cadence": "monthly",
+      "last_charged": "{{jobflow_charged}}",
+      "last_used": "{{jobflow_used}}"
+    },
+    {
+      "vendor": "Sketch3D",
+      "amount_usd": 25,
+      "cadence": "monthly",
+      "last_charged": "{{sketch_charged}}",
+      "last_used": "{{sketch_used}}"
+    },
+    {
+      "vendor": "TradeShield Insurance",
+      "amount_usd": 960,
+      "cadence": "yearly",
+      "last_charged": "{{insurance_charged}}",
+      "last_used": null
+    },
+    {
+      "vendor": "TileEstimate Pro",
+      "amount_usd": 39,
+      "cadence": "monthly",
+      "last_charged": "{{estimate_charged}}",
+      "last_used": "{{estimate_used}}"
+    }
+  ]
+}

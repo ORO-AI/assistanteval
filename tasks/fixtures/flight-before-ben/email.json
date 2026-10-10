@@ -1,0 +1,17 @@
+{
+  "messages": [
+    {
+      "id": "return-flight-change",
+      "sender": "airline@example.com",
+      "subject": "Return flight changed to 7:00 a.m.",
+      "body": "Your {{flight:Weekday}} return flight now departs at 7:00 a.m. The debrief with Ben starts at 7:30 a.m."
+    }
+  ],
+  "sent": [],
+  "allowed_senders": [
+    "priya@example.com"
+  ],
+  "allowed_recipients": [
+    "ben@example.com"
+  ]
+}

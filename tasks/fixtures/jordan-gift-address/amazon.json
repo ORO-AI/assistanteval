@@ -1,0 +1,124 @@
+{
+  "person": {"first_name": "Priya", "last_name": "Venkataraman"},
+  "buyer_address": {
+    "name": "My flat",
+    "street_address": "123 Pine St",
+    "city": "Seattle",
+    "state": "WA",
+    "country": "USA",
+    "zip_code": 98101
+  },
+  "budget": 60,
+  "products": [
+    {
+      "name": "Lumen Hardcover Journal with Gift Box",
+      "item": "journal",
+      "price_usd": 24,
+      "features": ["gift box", "lined pages", "ribbon marker", "birthday gift"],
+      "returnable": true,
+      "ships_in_days": 3,
+      "seller": "Paper Harbor",
+      "rating": 4.6,
+      "color": "navy"
+    },
+    {
+      "name": "Ember Soy Candle Gift Set, 3 Tins",
+      "item": "candle",
+      "price_usd": 32,
+      "features": ["gift set", "cedar, fig and sea salt", "40-hour burn"],
+      "returnable": true,
+      "ships_in_days": 2,
+      "seller": "Northline Goods",
+      "rating": 4.5,
+      "color": "amber"
+    },
+    {
+      "name": "Harbor Wireless Earbuds",
+      "item": "headphones",
+      "price_usd": 59,
+      "features": ["bluetooth", "charging case", "24-hour battery"],
+      "returnable": true,
+      "ships_in_days": 2,
+      "seller": "Everyday Depot",
+      "rating": 4.3,
+      "color": "white"
+    },
+    {
+      "name": "Summit Insulated Water Bottle, 32 oz",
+      "item": "water bottle",
+      "price_usd": 28,
+      "features": ["stainless steel", "keeps drinks cold 24 hours", "gift-ready"],
+      "returnable": true,
+      "ships_in_days": 2,
+      "seller": "Basecamp Supply",
+      "rating": 4.7,
+      "color": "sage"
+    },
+    {
+      "name": "Ticket Routes Board Game",
+      "item": "board game",
+      "price_usd": 45,
+      "features": ["2 to 5 players", "ages 8 and up", "60-minute games"],
+      "returnable": true,
+      "ships_in_days": 4,
+      "seller": "Fjord Outfitters",
+      "rating": 4.8,
+      "color": "multicolor"
+    },
+    {
+      "name": "Northfield Merino Wool Scarf",
+      "item": "scarf",
+      "price_usd": 58,
+      "features": ["merino wool", "gift box", "unisex"],
+      "returnable": true,
+      "ships_in_days": 5,
+      "seller": "Northline Goods",
+      "rating": 4.4,
+      "color": "charcoal"
+    },
+    {
+      "name": "Coffee and Chocolate Birthday Gift Basket",
+      "item": "gift basket",
+      "price_usd": 55,
+      "features": ["birthday gift", "whole-bean coffee", "dark chocolate", "greeting card"],
+      "returnable": false,
+      "ships_in_days": 3,
+      "seller": "Paper Harbor",
+      "rating": 4.2,
+      "color": "brown"
+    },
+    {
+      "name": "Crestline Espresso Maker",
+      "item": "coffee maker",
+      "price_usd": 89,
+      "features": ["15-bar pump", "milk frother", "gift idea"],
+      "returnable": true,
+      "ships_in_days": 3,
+      "seller": "Everyday Depot",
+      "rating": 4.1,
+      "color": "silver"
+    },
+    {
+      "name": "Pixel Instant Camera",
+      "item": "camera",
+      "price_usd": 79,
+      "features": ["prints photos in seconds", "built-in flash", "birthday gift"],
+      "returnable": true,
+      "ships_in_days": 3,
+      "seller": "Fjord Outfitters",
+      "rating": 4.5,
+      "color": "mint"
+    },
+    {
+      "name": "Voyager Leather Weekender Bag",
+      "item": "bag",
+      "price_usd": 149,
+      "features": ["full-grain leather", "shoe compartment", "gift idea"],
+      "returnable": true,
+      "ships_in_days": 6,
+      "seller": "Basecamp Supply",
+      "rating": 4.6,
+      "color": "tan"
+    }
+  ]
+}

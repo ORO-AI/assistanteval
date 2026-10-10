@@ -1,0 +1,15 @@
+{
+  "events": [
+    {
+      "id": "maya-dentist-{{trip}}",
+      "title": "Dentist appointment",
+      "start": "{{trip@10:30}}",
+      "end": "{{trip@11:30}}",
+      "location": "Dental clinic",
+      "description": "Existing appointment",
+      "attendees": [
+        "Maya Okafor"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "messages": [
+    {
+      "id": "grout-complaint-1",
+      "sender": "gpruitt77@gmail.example",
+      "subject": "Grout cracking",
+      "body": "Tomas, the grout in the shower you did in {{tiled:Month}} is cracking along the bottom row and one corner. Three months after the work, this is not acceptable for what I paid. I want it fixed or my money back. Please call me. Gary Pruitt"
+    }
+  ],
+  "allowed_senders": [
+    "tomas@reyestile.example"
+  ],
+  "allowed_recipients": [
+    "gpruitt77@gmail.example"
+  ]
+}

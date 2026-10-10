@@ -1,0 +1,22 @@
+{
+ "answers": {
+  "reader:2b566b7a304647084e42909582fbb2f9": {
+   "answer": 0.09,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "condition_met:amazon.checkout#1"
+  },
+  "reader:d71c7f9c14a78a4f2e5851e824ac5d2b": {
+   "answer": 0.16,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "has_condition:amazon.checkout#1"
+  },
+  "reader:f1335e014f456cf53ff58d29d3b9f515": {
+   "answer": 0.92,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "asked_for:amazon.checkout#1"
+  }
+ }
+}

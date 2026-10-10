@@ -1,0 +1,16 @@
+{
+  "messages": [
+    {
+      "id": "kingsway-{{job:weekday}}-confirmation",
+      "sender": "dhenderson@telus.example",
+      "subject": "Kingsway job on {{job:Weekday}}",
+      "body": "Hi Tomas, {{job:Weekday}} {{job:Month}} {{job:day}} works for the Kingsway job. See you then. — Doug"
+    }
+  ],
+  "allowed_senders": [
+    "tomas@reyestile.example"
+  ],
+  "allowed_recipients": [
+    "dhenderson@telus.example"
+  ]
+}

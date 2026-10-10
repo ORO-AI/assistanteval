@@ -1,0 +1,14 @@
+{
+  "contacts": [
+    {
+      "id": "margaret",
+      "name": "Margaret Fitzgerald",
+      "phone": "604-555-0501"
+    },
+    {
+      "id": "me",
+      "name": "Harold Fitzgerald (me)",
+      "phone": "604-555-0147"
+    }
+  ]
+}

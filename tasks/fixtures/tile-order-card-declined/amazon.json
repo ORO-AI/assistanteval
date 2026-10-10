@@ -1,0 +1,150 @@
+{
+  "version": "tile_order_card_declined_v1",
+  "task": {
+    "source": "tasks/tile-order-card-declined.json"
+  },
+  "person": {
+    "first_name": "Tomás",
+    "last_name": "Reyes"
+  },
+  "buyer_address": {
+    "name": "Tomás Reyes shop",
+    "street_address": "72 Workshop Rd",
+    "city": "Seattle",
+    "state": "WA",
+    "country": "USA",
+    "zip_code": 98101
+  },
+  "card_name": "Visa Business",
+  "card_last_four": 8802,
+  "card_balance_usd": 150,
+  "other_cards": [
+    {
+      "card_name": "Mastercard",
+      "card_prefix": 5,
+      "card_last_four": 4417,
+      "card_balance_usd": 2500
+    }
+  ],
+  "products": [
+    {
+      "name": "Coastal Stonehaven Grey 12x24 Porcelain Tile Open Lot B2 Box",
+      "description": "Grey 12x24 porcelain, dye lot B2. Seller advertises opened lot as final sale, no returns. One box covers 15 square feet.",
+      "seller": "Brickyard Supply",
+      "product_type": "porcelain tile",
+      "price": 29,
+      "delivery_days": 1,
+      "stock": 3,
+      "weight": 15,
+      "length": 24,
+      "width": 12,
+      "height": 4,
+      "color": "grey",
+      "relative_size": "large"
+    },
+    {
+      "name": "Coastal Stonehaven Grey 12x24 Porcelain Tile Lot C7 Box",
+      "description": "Grey 12x24 porcelain, dye lot C7. Seller advertises 30-day returns. One box covers 15 square feet.",
+      "seller": "Brickyard Supply",
+      "product_type": "porcelain tile",
+      "price": 38,
+      "delivery_days": 2,
+      "stock": 12,
+      "weight": 15,
+      "length": 24,
+      "width": 12,
+      "height": 4,
+      "color": "grey",
+      "relative_size": "large"
+    },
+    {
+      "name": "Coastal Stonehaven Grey 12x24 Porcelain Tile Lot D4 Box",
+      "description": "Grey 12x24 porcelain, dye lot D4. Seller advertises 30-day returns. One box covers 15 square feet.",
+      "seller": "Brickyard Supply",
+      "product_type": "porcelain tile",
+      "price": 42,
+      "delivery_days": 1,
+      "stock": 8,
+      "weight": 15,
+      "length": 24,
+      "width": 12,
+      "height": 4,
+      "color": "grey",
+      "relative_size": "large"
+    },
+    {
+      "name": "Coastal Stonehaven White 12x24 Porcelain Tile Lot A3 Box",
+      "description": "White 12x24 porcelain, dye lot A3. Seller advertises 30-day returns. One box covers 15 square feet.",
+      "seller": "Brickyard Supply",
+      "product_type": "porcelain tile",
+      "price": 36,
+      "delivery_days": 2,
+      "stock": 20,
+      "weight": 15,
+      "length": 24,
+      "width": 12,
+      "height": 4,
+      "color": "white",
+      "relative_size": "large"
+    },
+    {
+      "name": "Coastal Stonehaven Grey 24x24 Porcelain Tile Lot F1 Box",
+      "description": "Grey 24x24 porcelain, dye lot F1. Seller advertises 30-day returns. One box covers 16 square feet.",
+      "seller": "Brickyard Supply",
+      "product_type": "porcelain tile",
+      "price": 54,
+      "delivery_days": 3,
+      "stock": 10,
+      "weight": 32,
+      "length": 24,
+      "width": 24,
+      "height": 4,
+      "color": "grey",
+      "relative_size": "large"
+    },
+    {
+      "name": "Coastal Stonehaven Grey 3x12 Porcelain Bullnose Trim, 10-pack",
+      "description": "Grey 3x12 porcelain bullnose edge trim. Seller advertises 30-day returns.",
+      "seller": "Brickyard Supply",
+      "product_type": "tile trim",
+      "price": 24,
+      "delivery_days": 2,
+      "stock": 15,
+      "color": "grey",
+      "relative_size": "small"
+    },
+    {
+      "name": "Sanded Tile Grout, Pewter Grey, 10 lb",
+      "description": "Sanded cement grout for joints 1/8 inch and wider.",
+      "seller": "Maple Lane Hardware",
+      "product_type": "grout",
+      "price": 18,
+      "delivery_days": 1,
+      "stock": 40,
+      "color": "grey",
+      "relative_size": "medium"
+    },
+    {
+      "name": "Large Format Porcelain Tile Thinset Mortar, 50 lb",
+      "description": "Polymer-modified thinset for large porcelain tile on walls and floors.",
+      "seller": "Maple Lane Hardware",
+      "product_type": "mortar",
+      "price": 32,
+      "delivery_days": 2,
+      "stock": 25,
+      "color": "white",
+      "relative_size": "large"
+    },
+    {
+      "name": "Tile Leveling Spacers, 1/16 inch, 200-pack",
+      "description": "Reusable clips and wedges that keep large tiles flat while the thinset sets.",
+      "seller": "Maple Lane Hardware",
+      "product_type": "tile tools",
+      "price": 15,
+      "delivery_days": 2,
+      "stock": 60,
+      "color": "blue",
+      "relative_size": "small"
+    }
+  ]
+}

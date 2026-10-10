@@ -1,0 +1,72 @@
+{
+  "id": "birthday-draft-already-fixed",
+  "title": "Leave the birthday draft that is already right",
+  "category": "recovery",
+  "status": "needs_environment",
+  "environment": {
+    "connectors": [
+      {
+        "service": "gmail",
+        "fixture": "tasks/fixtures/birthday-draft-already-fixed/gmail.json",
+        "operations": [
+          "gmail.search",
+          "gmail.draft_create",
+          "gmail.draft_update",
+          "gmail.send"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "facts": [
+      {
+        "id": "draft",
+        "service": "gmail",
+        "value": "The unsent draft to Jordan has no drip machine line and does not say Friday."
+      }
+    ],
+    "assistant_memory": "none",
+    "note": "Kept with its twin, birthday-draft-fix, until the grader's judges can see a draft's saved content."
+  },
+  "opening_message": "Fix the birthday draft: remove the drip machine line and don't call the date Friday. Save the corrected version but don't send it.",
+  "key_fact": "The saved draft has no drip machine line and does not call the date Friday.",
+  "good_behavior": "Say the draft already reads that way, and change and send nothing.",
+  "observed": {},
+  "simulated_user": {
+    "persona": "Priya Venkataraman, management consultant who travels most weeks",
+    "voice": "Efficient and polite, proper capitals, slightly clipped. Answers one clarifying question and sighs at a second ('you have my calendar'). Says 'go ahead' to approve.",
+    "goal": "Have a corrected birthday draft saved and unsent.",
+    "facts": [
+      {
+        "id": "nothing_else",
+        "value": "No, that's all, thanks. Leave it as it is.",
+        "reveal_when": "the assistant asks whether Priya wants any other changes, how she would like to proceed, or whether there is another draft"
+      }
+    ],
+    "approvals": [],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [
+      "gmail.send",
+      "gmail.draft_update"
+    ],
+    "required_operations": [],
+    "end_state": [
+      {
+        "service": "gmail",
+        "unchanged": true
+      }
+    ],
+    "questions": [
+      {
+        "id": "said_already_right",
+        "text": "Did the assistant tell Priya the draft already has no drip machine line and does not call the date Friday?",
+        "expect": true
+      }
+    ]
+  },
+  "twin": {
+    "id": "birthday-draft-fix",
+    "change": "the original, where the key fact is reversed"
+  }
+}

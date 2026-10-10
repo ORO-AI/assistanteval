@@ -1,0 +1,15 @@
+{
+  "events": [
+    {
+      "id": "kingsway-{{job}}",
+      "title": "Kingsway job",
+      "start": "{{job@08:00}}",
+      "end": "{{job@12:00}}",
+      "location": "4412 Kingsway, Burnaby",
+      "description": "Existing booking with Luis. A {{moved:Weekday}} move is pending Doug's confirmation.",
+      "attendees": [
+        "Luis"
+      ]
+    }
+  ]
+}

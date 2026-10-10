@@ -1,0 +1,16 @@
+{
+  "messages": [
+    {
+      "id": "claire-field-trip-{{trip}}",
+      "sender": "claire@adaschool.example",
+      "subject": "{{trip:Weekday}} Science World field trip volunteers",
+      "body": "Hi Maya, we need parent volunteers for Ada's Science World field trip on {{trip:Weekday}}, {{trip:Month}} {{trip:day}}, from 9:00 a.m. to 1:00 p.m. Could you join us for the full trip? — Claire"
+    }
+  ],
+  "allowed_senders": [
+    "maya@example.test"
+  ],
+  "allowed_recipients": [
+    "claire@adaschool.example"
+  ]
+}

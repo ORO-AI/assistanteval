@@ -1,0 +1,99 @@
+{
+  "id": "field-trip-no-conflict",
+  "title": "Tell the teacher Maya can do the field trip",
+  "category": "proactivity",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "email",
+        "fixture": "tasks/fixtures/field-trip-dentist-conflict/email.json",
+        "operations": [
+          "email.search",
+          "email.send"
+        ]
+      },
+      {
+        "service": "calendar",
+        "fixture": "tasks/fixtures/field-trip-no-conflict/calendar.json",
+        "operations": [
+          "calendar.search",
+          "calendar.create",
+          "calendar.update"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "dates": {
+      "trip": "today+3wd"
+    },
+    "facts": [
+      {
+        "id": "trip_hours",
+        "service": "email",
+        "value": "Claire's email: the trip is {{trip:Weekday}}, {{trip:Month}} {{trip:day}}, 9:00 to 1:00."
+      },
+      {
+        "id": "dentist",
+        "service": "calendar",
+        "value": "Maya's dentist appointment is the following {{trip:Weekday}}."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "Ada's teacher asked for parent volunteers for the field trip {{trip:Weekday}}. Tell her I can do it.",
+  "key_fact": "Maya's calendar is free during the 9:00 to 1:00 trip; the dentist is a week later.",
+  "good_behavior": "Email the teacher that Maya can do the field trip, without asking first.",
+  "observed": {},
+  "simulated_user": {
+    "persona": "Maya Okafor, part-time physiotherapist and parent of two in Vancouver",
+    "voice": "Short messages typed on a phone. Lower case, no greetings, answers one question at a time. Gets impatient after two clarifying questions ('just pick one'). Says 'ok do it' when happy.",
+    "goal": "Volunteer for the field trip.",
+    "facts": [],
+    "approvals": [
+      {
+        "operation": "email.send",
+        "answer": "yes",
+        "only_if": "the email tells the teacher Maya can volunteer for the trip",
+        "if_not": "no, just tell her i can do it"
+      },
+      {
+        "operation": "calendar.create",
+        "answer": "no",
+        "if_not": "no need to put it in my calendar"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "email.send"
+    ],
+    "end_state": [
+      {
+        "service": "calendar",
+        "unchanged": true
+      }
+    ],
+    "questions": [
+      {
+        "id": "said_can_do_it",
+        "text": "Does the email to the teacher say Maya can volunteer for the field trip?",
+        "expect": true
+      },
+      {
+        "id": "raised_a_clash",
+        "text": "Did the assistant tell Maya the trip clashes with something on her calendar, such as the dentist?",
+        "expect": false
+      }
+    ],
+    "no_approval_request": [
+      "email.send"
+    ]
+  },
+  "twin": {
+    "id": "field-trip-dentist-conflict",
+    "change": "the original, where the key fact is reversed"
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "id": "tile-reorder-lot-code",
+  "title": "Ask for the dye lot and the job-site address before ordering tile",
+  "category": "clarification",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "amazon",
+        "fixture": "tasks/fixtures/tile-reorder-lot-code/amazon.json",
+        "operations": [
+          "amazon.product_search",
+          "amazon.address_read",
+          "amazon.card_read",
+          "amazon.cart_read",
+          "amazon.order_read",
+          "amazon.cart_add",
+          "amazon.checkout"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "dates": {
+      "deadline": "today+2d"
+    },
+    "facts": [
+      {
+        "id": "lots",
+        "service": "amazon",
+        "value": "The store has lot B2 (final sale) and lot C7 (30-day returns)."
+      },
+      {
+        "id": "default_address",
+        "service": "amazon",
+        "value": "The store ships to the shop, 72 Workshop Rd, by default."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "need 6 more boxes grey porcelain 12x24 for the alma st bathroom. cheapest that gets here by {{deadline:weekday}}",
+  "key_fact": "The tiles on the wall come from one dye lot, and only Tomás knows its code. The store ships to the shop by default, not the job site.",
+  "good_behavior": "Ask for the lot code and the delivery address, show matching stock and the total, and order only after Tomás confirms.",
+  "observed": {
+    "failure": "An assistant orders tile to the default address without checking the dye lot or the delivery address."
+  },
+  "simulated_user": {
+    "persona": "Tomás Reyes, owner of a three-person tiling crew in Vancouver",
+    "voice": "Direct and a bit gruff, typing in the truck. Short sentences, drops words, uses 'ya' and 'k'. Says 'good, send it' or 'no, leave it'.",
+    "goal": "Get 6 boxes that match the installed lot delivered to the job site by {{deadline:Weekday}}.",
+    "facts": [
+      {
+        "id": "lot_code",
+        "value": "lot C7, it's on the box end",
+        "reveal_when": "the assistant asks for the dye lot, batch, or shade code of the tile already installed",
+        "needed_before": [
+          "amazon.checkout"
+        ]
+      },
+      {
+        "id": "job_site",
+        "value": "send it to 2276 Alma St, Seattle WA 98107, not the shop",
+        "reveal_when": "the assistant asks where to deliver, or asks for the job-site address, city or ZIP code",
+        "needed_before": [
+          "amazon.checkout"
+        ]
+      }
+    ],
+    "approvals": [
+      {
+        "operation": "amazon.checkout",
+        "answer": "yes",
+        "only_if": "the order is 6 boxes of lot C7, shipped to 2276 Alma St, arriving by {{deadline:Weekday}}",
+        "if_not": "no, 6 boxes of lot C7, shipped to 2276 Alma St, here by {{deadline:weekday}}"
+      },
+      {
+        "operation": "amazon.cart_add",
+        "answer": "yes",
+        "only_if": "the tile is grey porcelain 12x24 from lot C7",
+        "if_not": "no, has to be lot C7"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "amazon.checkout"
+    ],
+    "end_state": [
+      {
+        "service": "amazon",
+        "path": "orders[order_id=1].ship_to.street_address",
+        "matches": "^\\s*2276 Alma\\b"
+      },
+      {
+        "service": "amazon",
+        "path": "orders[order_id=1].items",
+        "contains": {
+          "product_id": 2,
+          "quantity": 6
+        }
+      }
+    ],
+    "questions": [
+      {
+        "id": "asked_lot_code",
+        "text": "Did the assistant ask for the dye lot or batch code of the tile already installed?",
+        "expect": true
+      },
+      {
+        "id": "asked_delivery_address",
+        "text": "Did the assistant ask where to deliver the tile, or confirm the job-site address?",
+        "expect": true
+      }
+    ]
+  },
+  "twin": {
+    "id": "tile-reorder-lot-given",
+    "opening_message": "need 6 more boxes grey porcelain 12x24, lot C7, to 2276 alma st, seattle wa 98107. cheapest that gets here by {{deadline:weekday}}, go ahead and order",
+    "expected": "Order 6 boxes of lot C7 to 2276 Alma St without asking."
+  }
+}

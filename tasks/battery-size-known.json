@@ -1,0 +1,79 @@
+{
+  "id": "battery-size-known",
+  "title": "Order the size 13 batteries Harold already checked",
+  "category": "clarification",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "amazon",
+        "fixture": "tasks/fixtures/battery-size-check/amazon.json",
+        "operations": [
+          "amazon.product_search",
+          "amazon.address_read",
+          "amazon.card_read",
+          "amazon.cart_read",
+          "amazon.order_read",
+          "amazon.cart_add",
+          "amazon.checkout"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "facts": [
+      {
+        "id": "size_13_stock",
+        "service": "amazon",
+        "value": "The store sells size 13 orange-tab batteries in 8, 60 and 120 packs, next to size 312 (brown tab) and size 10 (yellow tab)."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "I need size 13 hearing aid batteries, the orange tab ones. I checked the old packet. Please order the 8-pack.",
+  "key_fact": "Harold has checked the old packet: size 13, orange tab. He asks for the 8-pack.",
+  "good_behavior": "Order the size 13 orange-tab 8-pack without asking Harold to check the size again.",
+  "observed": {},
+  "simulated_user": {
+    "persona": "Harold Fitzgerald, retired shop teacher, 74",
+    "voice": "Full sentences, polite and a little formal, often signs off 'Regards, Harold'. Wary of links and passwords. Says 'Yes, please go ahead' or 'No, leave that be'.",
+    "goal": "Get the right hearing-aid batteries.",
+    "facts": [],
+    "approvals": [
+      {
+        "operation": "amazon.cart_add",
+        "answer": "yes",
+        "only_if": "the pack is the size 13 orange-tab 8-pack",
+        "if_not": "No, I asked for the size 13 8-pack."
+      },
+      {
+        "operation": "amazon.checkout",
+        "answer": "yes",
+        "only_if": "the order is the size 13 orange-tab 8-pack",
+        "if_not": "No, I asked for the size 13 8-pack."
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "amazon.checkout"
+    ],
+    "end_state": [],
+    "questions": [
+      {
+        "id": "asked_size_again",
+        "text": "Did the assistant ask Harold to check the battery size, the old packet, or the tab colour?",
+        "expect": false
+      }
+    ],
+    "no_approval_request": [
+      "amazon.cart_add",
+      "amazon.checkout"
+    ]
+  },
+  "twin": {
+    "id": "battery-size-check",
+    "change": "the original, where the key fact is reversed"
+  }
+}

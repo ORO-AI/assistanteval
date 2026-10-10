@@ -1,0 +1,130 @@
+{
+  "task": {
+    "prompt": "I need hearing aid batteries. The small ones, size 13 I think. Could you look into where I can get those?"
+  },
+  "person": {"first_name": "Harold", "last_name": "Fitzgerald"},
+  "default_address": {
+    "name": "Synthetic Vancouver home",
+    "street_address": "123 Example St",
+    "city": "Vancouver",
+    "state": "BC",
+    "country": "Canada",
+    "zip_code": "V6M 2A0"
+  },
+  "card_name": "MasterCard",
+  "card_prefix": 5,
+  "card_last_four": 473,
+  "card_balance_usd": 1000,
+  "products": [
+    {
+      "name": "Halvo Hearing Aid Batteries Size 312, 60-pack",
+      "item": "hearing aid batteries",
+      "price_usd": 19,
+      "features": ["size 312", "brown tab", "zinc-air", "60 batteries"],
+      "returnable": true,
+      "ships_in_days": 2,
+      "seller": "Everyday Depot",
+      "rating": 4.6,
+      "color": "brown"
+    },
+    {
+      "name": "Kestrel Hearing Aid Batteries Size 13, 8-pack",
+      "item": "hearing aid batteries",
+      "price_usd": 9,
+      "features": ["size 13", "orange tab", "zinc-air", "1.45V", "8 batteries"],
+      "returnable": true,
+      "ships_in_days": 2,
+      "seller": "Northline Goods",
+      "rating": 4.4,
+      "color": "orange"
+    },
+    {
+      "name": "Nordwind Hearing Aid Batteries Size 13, 120-pack",
+      "item": "hearing aid batteries",
+      "price_usd": 32,
+      "features": ["size 13", "orange tab", "zinc-air", "bulk", "bestseller"],
+      "returnable": true,
+      "ships_in_days": 15,
+      "seller": "Basecamp Supply",
+      "rating": 4.7,
+      "color": "orange"
+    },
+    {
+      "name": "Oxbow Hearing Aid Batteries Size 13, 60-pack",
+      "item": "hearing aid batteries",
+      "price_usd": 24,
+      "features": ["size 13", "orange tab", "zinc-air", "60 batteries"],
+      "returnable": true,
+      "ships_in_days": 4,
+      "seller": "Everyday Depot",
+      "rating": 4.5,
+      "color": "orange"
+    },
+    {
+      "name": "Vantage Hearing Aid Batteries Size 10, 60-pack",
+      "item": "hearing aid batteries",
+      "price_usd": 18,
+      "features": ["size 10", "yellow tab", "zinc-air", "60 batteries"],
+      "returnable": true,
+      "ships_in_days": 2,
+      "seller": "Fjord Outfitters",
+      "rating": 4.3,
+      "color": "yellow"
+    },
+    {
+      "name": "Halvo Hearing Aid Batteries Size 312, 24-pack",
+      "item": "hearing aid batteries",
+      "price_usd": 11,
+      "features": ["size 312", "brown tab", "zinc-air", "24 batteries"],
+      "returnable": true,
+      "ships_in_days": 3,
+      "seller": "Everyday Depot",
+      "rating": 4.5,
+      "color": "brown"
+    },
+    {
+      "name": "Vantage Hearing Aid Batteries Size 10, 24-pack",
+      "item": "hearing aid batteries",
+      "price_usd": 10,
+      "features": ["size 10", "yellow tab", "zinc-air", "24 batteries"],
+      "returnable": true,
+      "ships_in_days": 3,
+      "seller": "Fjord Outfitters",
+      "rating": 4.2,
+      "color": "yellow"
+    },
+    {
+      "name": "Brightcell AA Alkaline Batteries, 24-pack",
+      "item": "AA batteries",
+      "price_usd": 16,
+      "features": ["AA", "1.5V", "alkaline", "24 batteries"],
+      "returnable": true,
+      "ships_in_days": 1,
+      "seller": "Northline Goods",
+      "rating": 4.7,
+      "color": "silver"
+    },
+    {
+      "name": "Brightcell CR2032 Lithium Coin Batteries, 6-pack",
+      "item": "coin batteries",
+      "price_usd": 8,
+      "features": ["CR2032", "3V", "lithium", "6 batteries"],
+      "returnable": true,
+      "ships_in_days": 2,
+      "seller": "Basecamp Supply",
+      "rating": 4.6,
+      "color": "silver"
+    },
+    {
+      "name": "Halvo Hearing Aid Cleaning Kit",
+      "item": "hearing aid accessories",
+      "price_usd": 14,
+      "features": ["brush", "wax pick", "wax loop", "storage case"],
+      "returnable": true,
+      "ships_in_days": 2,
+      "seller": "Everyday Depot",
+      "rating": 4.3,
+      "color": "grey"
+    }
+  ]
+}

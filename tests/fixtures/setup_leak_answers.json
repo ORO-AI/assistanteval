@@ -1,0 +1,28 @@
+{
+ "answers": {
+  "reader:62f0a2f1983de8b385002840a1853973": {
+   "answer": 0.96,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "setup_leak:0"
+  },
+  "reader:7a6afe20adf2da360c211b17cb2ee2e9": {
+   "answer": 0.81,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "setup_leak:0"
+  },
+  "reader:b825594a360e4da5a83f5dfbf99ba56b": {
+   "answer": 0.06,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "setup_leak:0"
+  },
+  "reader:e8d88cab136e3a22947b6349a7ecbcc0": {
+   "answer": 0.05,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "setup_leak:0"
+  }
+ }
+}

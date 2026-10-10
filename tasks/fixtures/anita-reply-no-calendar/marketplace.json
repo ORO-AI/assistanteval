@@ -1,0 +1,35 @@
+{
+  "now": "{{now}}",
+  "my_listings": [
+    {
+      "id": "lst-001",
+      "title": "Double stroller - Bumbleride Indie Twin, grey, good condition",
+      "asking_usd": 220,
+      "status": "active",
+      "threads": [
+        {
+          "id": "thr-011",
+          "buyer": "Kyle R.",
+          "messages": [
+            {
+              "from": "buyer",
+              "text": "90 cash today, can pick up in 20 min",
+              "date": "{{kyle_wrote}}"
+            }
+          ]
+        },
+        {
+          "id": "thr-012",
+          "buyer": "Anita Sharma",
+          "messages": [
+            {
+              "from": "buyer",
+              "text": "{{pickup:Weekday}} at 6 works for me. Would you take $180?",
+              "date": "{{anita_wrote}}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

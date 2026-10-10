@@ -1,0 +1,14 @@
+{
+  "current": {
+    "id": "priya-return-0700",
+    "departure": "{{flight@07:00}}",
+    "change_fee_usd": 0
+  },
+  "alternatives": [
+    {
+      "id": "priya-return-1300",
+      "departure": "{{flight@13:00}}",
+      "change_fee_usd": 85
+    }
+  ]
+}

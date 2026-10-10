@@ -1,0 +1,14 @@
+{
+  "owner": "sam.nguyen@synthetic.example",
+  "inbox": [
+    {
+      "id": "msg-0001",
+      "sender": "ravi.sethi@synthetic.example",
+      "recipient": "sam.nguyen@synthetic.example",
+      "subject": "CHEM 335 lab section",
+      "body": "Hi Sam, I'm Ravi Sethi, your CHEM 335 teaching assistant. The lab is due Thursday. Email me here if you have questions. — Ravi"
+    }
+  ],
+  "drafts": [],
+  "sent": []
+}

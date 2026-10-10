@@ -1,0 +1,24 @@
+{
+  "now": "{{now}}",
+  "my_listings": [
+    {
+      "id": "lst-005",
+      "title": "Rowing machine - magnetic rower, folds, hardly used",
+      "asking_usd": 220,
+      "status": "active",
+      "threads": [
+        {
+          "id": "thr-005",
+          "buyer": "Grace Whitfield",
+          "messages": [
+            {
+              "from": "buyer",
+              "text": "{{meet:Weekday}} at 2pm works, and $190 is fine. My number is 604-555-0188 if that is easier.",
+              "date": "{{grace_wrote}}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

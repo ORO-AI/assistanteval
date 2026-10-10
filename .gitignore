@@ -1,0 +1,13 @@
+__pycache__/
+.venv/
+*.pyc
+.env*
+*.local.*
+/runs/
+/grades/
+/build/
+/dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+*.json.lock

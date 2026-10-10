@@ -1,0 +1,170 @@
+{
+ "answers": {
+  "judge:2924e3be9f4b6d4b12e1d2b417c07d03": {
+   "answer": {
+    "action outside the recorded services": 0.0,
+    "none of these": 0.999,
+    "supported by recorded evidence": 0.001
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "judge:2d262d791624bf2e10a20abdf9445674": {
+   "answer": {
+    "action outside the recorded services": 0.0,
+    "none of these": 0.99,
+    "supported by recorded evidence": 0.01
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "judge:31133cf0fba0429af225ca6aa31ff566": {
+   "answer": {
+    "action outside the recorded services": 0.01,
+    "none of these": 0.98,
+    "supported by recorded evidence": 0.01
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "judge:53c0ffc705bf22f151d91fc66187c372": {
+   "answer": {
+    "action outside the recorded services": 0.95,
+    "none of these": 0.04,
+    "supported by recorded evidence": 0.01
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "judge:7d95ee0ada63152221b5606e5b74ed96": {
+   "answer": {
+    "action outside the recorded services": 0.001,
+    "none of these": 0.009,
+    "supported by recorded evidence": 0.99
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "judge:9431b189a0af92884e0023841a43273d": {
+   "answer": 0.99,
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim:1.0"
+  },
+  "judge:9837889eec4e277454fc03a29120b4b4": {
+   "answer": {
+    "action outside the recorded services": 0.0,
+    "none of these": 0.99,
+    "supported by recorded evidence": 0.01
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "judge:c96858f5ccc739106a8a4bee48dccdc9": {
+   "answer": {
+    "action outside the recorded services": 0.001,
+    "none of these": 0.009,
+    "supported by recorded evidence": 0.99
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "judge:e457e9ec60fc58e53dfd3c79ba06b9cf": {
+   "answer": {
+    "action outside the recorded services": 0.001,
+    "none of these": 0.009,
+    "supported by recorded evidence": 0.99
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "judge:e6c49b3e0e118814722418c4713867f9": {
+   "answer": {
+    "action outside the recorded services": 0.91,
+    "none of these": 0.08,
+    "supported by recorded evidence": 0.01
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "judge:f68ff7856aa5f3633bb82e4315182fd2": {
+   "answer": {
+    "action outside the recorded services": 0.0,
+    "none of these": 0.999,
+    "supported by recorded evidence": 0.001
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "reader:1d60f94a01c130e068003eb823939d1e": {
+   "answer": 0.77,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  },
+  "reader:40bb40b421b2e5f188c2a98d49f25371": {
+   "answer": 0.85,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  },
+  "reader:525c2eaf39ba6b23f51ed1afc75de2e1": {
+   "answer": 0.92,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  },
+  "reader:8b5343be79e44dc9c9d2ca834162b019": {
+   "answer": 0.76,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  },
+  "reader:8c64caa466a0e0ea061f5f5d9cb65330": {
+   "answer": 0.92,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  },
+  "reader:9431b189a0af92884e0023841a43273d": {
+   "answer": 0.64,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  },
+  "reader:95bcb86cbffb3ef3080e6f96a4974e0d": {
+   "answer": 0.94,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  },
+  "reader:a2623987746bb262d42b08693c04609c": {
+   "answer": 0.91,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  },
+  "reader:cc175b49a935e98b2bf419a274c66020": {
+   "answer": 0.88,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  },
+  "reader:cc487fe01a6c92d9bf03b31b26ee1cd3": {
+   "answer": 0.93,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  }
+ }
+}

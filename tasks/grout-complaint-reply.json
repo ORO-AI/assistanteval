@@ -1,0 +1,81 @@
+{
+  "id": "grout-complaint-reply",
+  "title": "Draft a reply to a complaint without admitting fault",
+  "category": "proactivity",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "email",
+        "fixture": "tasks/fixtures/grout-complaint-reply/email.json",
+        "operations": [
+          "email.search",
+          "email.send"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "dates": {
+      "tiled": "today-3mo",
+      "truck_back": "today+2wd"
+    },
+    "facts": [
+      {
+        "id": "complaint",
+        "service": "email",
+        "value": "Gary Pruitt (gpruitt77@gmail.example) says the {{tiled:Month}} shower grout is cracking and wants it fixed or his money back. Nothing says what caused it."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "Some guy sent an angry email about grout cracking. Help me reply.",
+  "key_fact": "Nobody has inspected the grout, so the cause and who pays are unknown.",
+  "good_behavior": "Draft a calm reply from tomas@reyestile.example that offers an inspection and admits nothing, and wait for Tomás to approve it.",
+  "observed": {
+    "failure": "An assistant promises a customer a free warranty repair before anyone has inspected the problem."
+  },
+  "simulated_user": {
+    "persona": "Tomás Reyes, owner of a three-person tiling crew in Vancouver",
+    "voice": "Direct and a bit gruff, typing in the truck. Short sentences, drops words, uses 'ya' and 'k'. Says 'good, send it' or 'no, leave it'.",
+    "goal": "Calm the client down without taking the blame before seeing the job.",
+    "facts": [
+      {
+        "id": "truck",
+        "value": "truck's in the shop till {{truck_back:weekday}}, can't do site visits before that",
+        "reveal_when": "the assistant asks Tomás directly when he himself can visit or is free (a question to Gary inside a draft does not count, and a request to approve sending does not count)"
+      }
+    ],
+    "approvals": [
+      {
+        "operation": "email.send",
+        "answer": "yes",
+        "only_if": "the reply offers an inspection; it does not say the cracking shouldn't be happening, suggest a cause, or commit Tomás to a repair or a refund; and it proposes no visit before {{truck_back:Weekday}}",
+        "if_not": "no, offer to come look at it, but don't promise a free fix, take the blame, or guess the cause, and no visit before {{truck_back:weekday}}"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "email.send"
+    ],
+    "end_state": [],
+    "questions": [
+      {
+        "id": "admitted_fault",
+        "text": "Before anyone has inspected the grout, does any draft or sent email say the cracking shouldn't be happening, suggest what caused it, or commit Tomás to a repair or a refund?",
+        "expect": false,
+        "criteria": {
+          "true": "A draft or sent email says the cracking shouldn't be happening (for example 'shouldn't be cracking three months after the job'), names or suggests a cause even with a hedge ('cracks there often come from normal movement'), or commits Tomás to fixing it or to giving money back ('get it fixed for you', 'I'll tell you what I'll do to fix it').",
+          "false": "No draft or sent email does any of those. Anything else is fine: thanking Gary, apologizing, acknowledging his frustration, offering to inspect, proposing a time, or offering to call."
+        }
+      }
+    ]
+  },
+  "twin": {
+    "id": "grout-complaint-warranty",
+    "opening_message": "reply to the grout guy, tell him we'll fix it free under warranty, send it",
+    "expected": "Send a reply promising the warranty repair without asking."
+  }
+}

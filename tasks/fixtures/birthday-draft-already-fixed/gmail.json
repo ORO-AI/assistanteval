@@ -1,0 +1,13 @@
+{
+  "owner": "priya.synthetic@example.com",
+  "inbox": [],
+  "drafts": [
+    {
+      "id": "draft-0001",
+      "recipient": "jordan.synthetic@example.com",
+      "subject": "Happy birthday, Jordan",
+      "body": "Happy birthday, Jordan!\nI hope your day is a great one.\nLove, Priya"
+    }
+  ],
+  "sent": []
+}

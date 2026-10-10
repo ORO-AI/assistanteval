@@ -1,0 +1,16 @@
+{
+  "events": [
+    {
+      "id": "jordan-birthday-{{birthday:year}}",
+      "title": "Jordan's birthday",
+      "start": "{{birthday@09:00}}",
+      "end": "{{birthday@10:00}}",
+      "location": "Home",
+      "description": "Birthday gift plan is in {{pickup:Month}}. Arrange courier pickup before the birthday, once Priya confirms the date.",
+      "attendees": [
+        "Priya",
+        "Jordan"
+      ]
+    }
+  ]
+}

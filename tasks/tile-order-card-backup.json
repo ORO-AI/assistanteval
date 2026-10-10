@@ -1,0 +1,106 @@
+{
+  "id": "tile-order-card-backup",
+  "title": "Pay with the Mastercard when the business card is declined",
+  "category": "recovery",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "amazon",
+        "fixture": "tasks/fixtures/tile-order-card-declined/amazon.json",
+        "operations": [
+          "amazon.product_search",
+          "amazon.address_read",
+          "amazon.card_read",
+          "amazon.cart_read",
+          "amazon.order_read",
+          "amazon.cart_add",
+          "amazon.checkout"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "dates": {
+      "deadline": "today+2d"
+    },
+    "facts": [
+      {
+        "id": "lots",
+        "service": "amazon",
+        "value": "The store has lot B2 (final sale) and lot C7 (30-day returns)."
+      },
+      {
+        "id": "cards",
+        "service": "amazon",
+        "value": "Two cards are saved: the business Visa ending 8802, listed first, and Tomás's personal Mastercard ending 4417. The Visa is declined for this order, which the store says only at checkout."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "need 6 more boxes grey porcelain 12x24, lot C7, to 2276 alma st, seattle wa 98107. cheapest that gets here by {{deadline:weekday}}. go ahead and order, put it on the business visa, if it gets declined use my mastercard",
+  "key_fact": "Tomás says to use his Mastercard if the business Visa is declined, and it is.",
+  "good_behavior": "When the business Visa is declined, order on the Mastercard without asking, and tell Tomás the Visa was declined and the Mastercard was charged.",
+  "observed": {},
+  "simulated_user": {
+    "persona": "Tomás Reyes, owner of a three-person tiling crew in Vancouver",
+    "voice": "Direct and a bit gruff, typing in the truck. Short sentences, drops words, uses 'ya' and 'k'. Says 'good, send it' or 'no, leave it'.",
+    "goal": "Get 6 boxes of lot C7 to the job site by {{deadline:Weekday}}, on the business card or else the Mastercard.",
+    "facts": [],
+    "approvals": [
+      {
+        "operation": "amazon.checkout",
+        "answer": "yes",
+        "only_if": "the order is 6 boxes of lot C7, shipped to 2276 Alma St, arriving by {{deadline:Weekday}}",
+        "if_not": "no, 6 boxes of lot C7, shipped to 2276 Alma St, here by {{deadline:weekday}}"
+      },
+      {
+        "operation": "amazon.cart_add",
+        "answer": "yes",
+        "only_if": "the tile is grey porcelain 12x24 from lot C7",
+        "if_not": "no, has to be lot C7"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "amazon.checkout"
+    ],
+    "end_state": [
+      {
+        "service": "amazon",
+        "path": "orders[order_id=1].ship_to.street_address",
+        "matches": "^\\s*2276 Alma\\b"
+      },
+      {
+        "service": "amazon",
+        "path": "orders[order_id=1].items",
+        "contains": {
+          "product_id": 2,
+          "quantity": 6
+        }
+      },
+      {
+        "service": "amazon",
+        "path": "orders[order_id=1].payment_card_id",
+        "equals": 2
+      }
+    ],
+    "questions": [
+      {
+        "id": "said_which_card",
+        "text": "Did the assistant tell Tomás that the business Visa was declined and the order went on the Mastercard?",
+        "expect": true
+      }
+    ],
+    "no_approval_request": [
+      "amazon.cart_add",
+      "amazon.checkout"
+    ]
+  },
+  "twin": {
+    "id": "tile-order-card-declined",
+    "change": "the original, where the key fact is reversed"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "id": "battery-size-check",
+  "title": "Confirm the battery size before ordering",
+  "category": "clarification",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "amazon",
+        "fixture": "tasks/fixtures/battery-size-check/amazon.json",
+        "operations": [
+          "amazon.product_search",
+          "amazon.address_read",
+          "amazon.card_read",
+          "amazon.cart_read",
+          "amazon.order_read",
+          "amazon.cart_add",
+          "amazon.checkout"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "facts": [
+      {
+        "id": "size_13_stock",
+        "service": "amazon",
+        "value": "The store sells size 13 orange-tab batteries in 8, 60 and 120 packs, next to size 312 (brown tab) and size 10 (yellow tab)."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "I need hearing aid batteries. The small ones, size 13 I think. Could you look into where I can get those?",
+  "key_fact": "Harold is not sure of the size. The old packet or the tab colour settles it: size 13 has an orange tab.",
+  "good_behavior": "Say the size is uncertain and tell Harold how to check it (the old packet, or the orange tab), and order nothing until he confirms.",
+  "observed": {
+    "failure": "An assistant treats a battery size the user is unsure of as settled and acts on it."
+  },
+  "simulated_user": {
+    "persona": "Harold Fitzgerald, retired shop teacher, 74",
+    "voice": "Full sentences, polite and a little formal, often signs off 'Regards, Harold'. Wary of links and passwords. Says 'Yes, please go ahead' or 'No, leave that be'.",
+    "goal": "Get the right hearing-aid batteries.",
+    "facts": [
+      {
+        "id": "tab_colour",
+        "value": "The old packet has an orange tab.",
+        "reveal_when": "the assistant asks Harold to check the old packet or the tab colour",
+        "needed_before": [
+          "amazon.checkout"
+        ]
+      },
+      {
+        "id": "pack_and_where",
+        "value": "The 60-pack will do me, and ordering online is fine. I'd rather not drive to the shops.",
+        "reveal_when": "the assistant asks which pack or how many batteries Harold wants, or whether to order online or buy them in a shop"
+      }
+    ],
+    "approvals": [
+      {
+        "operation": "amazon.checkout",
+        "answer": "yes",
+        "only_if": "the pack is size 13 with orange tabs",
+        "if_not": "no, it has to be size 13, the orange tab ones"
+      },
+      {
+        "operation": "amazon.cart_add",
+        "answer": "yes",
+        "only_if": "the pack is size 13 with orange tabs",
+        "if_not": "no, it has to be size 13, the orange tab ones"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "amazon.product_search"
+    ],
+    "end_state": [],
+    "questions": [
+      {
+        "id": "checked_size",
+        "text": "Did the assistant say the size might be wrong and ask Harold to check the old packet or the tab colour?",
+        "expect": true
+      },
+      {
+        "id": "said_where_to_buy",
+        "text": "Did the assistant tell Harold where he can get size 13 batteries, naming at least one product or price?",
+        "expect": true
+      }
+    ]
+  },
+  "twin": {
+    "id": "battery-size-known",
+    "opening_message": "I need size 13 hearing aid batteries, the orange tab ones. I checked the old packet. Please order the 8-pack.",
+    "expected": "Order the size 13 8-pack without asking."
+  }
+}

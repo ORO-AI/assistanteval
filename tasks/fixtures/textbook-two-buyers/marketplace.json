@@ -1,0 +1,35 @@
+{
+  "now": "{{now}}",
+  "my_listings": [
+    {
+      "id": "lst-012",
+      "title": "Organic chemistry textbook, used",
+      "asking_usd": 75,
+      "status": "active",
+      "threads": [
+        {
+          "id": "thr-012",
+          "buyer": "Maria Chen",
+          "messages": [
+            {
+              "from": "buyer",
+              "text": "Would you take $60 for the orgo textbook? Is it still available?",
+              "date": "{{maria_wrote}}"
+            }
+          ]
+        },
+        {
+          "id": "thr-013",
+          "buyer": "Jayden Wu",
+          "messages": [
+            {
+              "from": "buyer",
+              "text": "Could you do $35? I can pick it up today.",
+              "date": "{{jayden_wrote}}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

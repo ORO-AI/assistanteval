@@ -1,0 +1,19 @@
+{
+  "current": {
+    "id": "priya-return-0700",
+    "departure": "2026-10-02T07:00:00-07:00",
+    "change_fee_usd": 0
+  },
+  "alternatives": [
+    {
+      "id": "priya-return-1045",
+      "departure": "2026-10-02T10:45:00-07:00",
+      "change_fee_usd": 0
+    },
+    {
+      "id": "priya-return-1300",
+      "departure": "2026-10-02T13:00:00-07:00",
+      "change_fee_usd": 85
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "id": "kingsway-reschedule-crew",
+  "title": "Move the job and keep the crew assignments",
+  "category": "recovery",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "calendar",
+        "fixture": "tasks/fixtures/kingsway-reschedule-crew/calendar.json",
+        "operations": [
+          "calendar.search",
+          "calendar.create",
+          "calendar.update"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "dates": {
+      "job": "today+1wd",
+      "moved": "job+3wd"
+    },
+    "facts": [
+      {
+        "id": "kingsway_booking",
+        "service": "calendar",
+        "value": "Kingsway is {{job:Weekday}}, {{job:Month}} {{job:day}}, 8 to 12, with Luis."
+      },
+      {
+        "id": "fraserview_booking",
+        "service": "calendar",
+        "value": "Fraserview is {{job:Weekday}}, {{job:Month}} {{job:day}}, 8 to 12, with Jasmeet only."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "doug confirmed {{moved:weekday}}. move kingsway over and make sure luis is still on it. fraserview {{job:weekday}} is jasmeet and luis.",
+  "key_fact": "Moving Kingsway must keep Luis on it, and {{job:Weekday}}'s Fraserview must end with both Jasmeet and Luis.",
+  "good_behavior": "Move Kingsway to {{moved:Weekday}} {{moved:Month}} {{moved:day}}, 8 to 12, keep Luis, add Luis to {{job:Weekday}}'s Fraserview, and change nothing else.",
+  "observed": {
+    "failure": "An assistant reschedules a job but drops a crew member from it and never adds him to the other job he now covers."
+  },
+  "simulated_user": {
+    "persona": "Tomás Reyes, owner of a three-person tiling crew in Vancouver",
+    "voice": "Direct and a bit gruff, typing in the truck. Short sentences, drops words, uses 'ya' and 'k'. Says 'good, send it' or 'no, leave it'.",
+    "goal": "Kingsway on {{moved:Weekday}} with Luis; Fraserview on {{job:Weekday}} with Jasmeet and Luis.",
+    "facts": [],
+    "approvals": [
+      {
+        "operation": "calendar.update",
+        "answer": "yes",
+        "only_if": "the change is to the Kingsway or Fraserview job as asked",
+        "if_not": "no, only change the kingsway and fraserview jobs like i said"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "calendar.update"
+    ],
+    "end_state": [
+      {
+        "service": "calendar",
+        "path": "events[id=kingsway-{{job}}].start",
+        "equals": "{{moved@08:00}}"
+      },
+      {
+        "service": "calendar",
+        "path": "events[id=kingsway-{{job}}].end",
+        "equals": "{{moved@12:00}}"
+      },
+      {
+        "service": "calendar",
+        "path": "events[id=kingsway-{{job}}].attendees",
+        "equals": [
+          "Luis"
+        ]
+      },
+      {
+        "service": "calendar",
+        "path": "events[id=fraserview-{{job}}].attendees",
+        "equals": [
+          "Jasmeet",
+          "Luis"
+        ]
+      }
+    ],
+    "questions": [
+      {
+        "id": "reported_luis_on_kingsway",
+        "text": "Did the assistant say that Luis stays on the Kingsway job?",
+        "expect": true
+      },
+      {
+        "id": "reported_fraserview_crew",
+        "text": "Did the assistant say that {{job:Weekday}}'s Fraserview job has both Jasmeet and Luis?",
+        "expect": true
+      }
+    ],
+    "no_approval_request": [
+      "calendar.update"
+    ]
+  },
+  "twin": {
+    "id": "kingsway-ask-doug-first",
+    "change": "Doug has not confirmed {{moved:Weekday}}.",
+    "expected": "Ask Doug first and keep {{job:Weekday}}."
+  }
+}

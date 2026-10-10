@@ -1,0 +1,15 @@
+{
+  "events": [
+    {
+      "id": "debrief-{{flight:weekday}}-0730",
+      "title": "Debrief with Ben",
+      "start": "{{flight@07:30}}",
+      "end": "{{flight@08:00}}",
+      "location": "Video call",
+      "description": "Client debrief after return travel",
+      "attendees": [
+        "Ben"
+      ]
+    }
+  ]
+}

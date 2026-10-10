@@ -1,0 +1,15 @@
+{
+  "events": [
+    {
+      "id": "maya-clinic-{{pickup}}",
+      "title": "Clinic shift",
+      "start": "{{pickup@09:00}}",
+      "end": "{{pickup@13:00}}",
+      "location": "Broadway Physio",
+      "description": "Existing shift; no stroller pickup is scheduled. On the family calendar Maya shares with Ben: he sees every event on it.",
+      "attendees": [
+        "Maya Okafor"
+      ]
+    }
+  ]
+}

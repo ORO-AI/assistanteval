@@ -1,0 +1,27 @@
+{
+  "now": "2026-09-22T09:00:00-07:00",
+  "my_listings": [
+    {
+      "id": "lst-001",
+      "title": "Used desk chair",
+      "asking_usd": 80,
+      "status": "active",
+      "threads": [
+        {
+          "id": "thr-011",
+          "buyer": "Alex Chen",
+          "messages": [
+            {"from": "buyer", "text": "Can you deliver it?", "date": "2026-09-21T22:51:00-07:00"}
+          ]
+        },
+        {
+          "id": "thr-012",
+          "buyer": "Jordan Lee",
+          "messages": [
+            {"from": "buyer", "text": "Is it available for pickup?", "date": "2026-09-22T07:40:00-07:00"}
+          ]
+        }
+      ]
+    }
+  ]
+}

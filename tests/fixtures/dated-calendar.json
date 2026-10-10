@@ -1,0 +1,11 @@
+{
+  "events": [
+    {
+      "id": "kingsway-{{job}}",
+      "title": "Kingsway job",
+      "start": "{{job@08:00}}",
+      "end": "{{job@12:00}}",
+      "attendees": ["Luis"]
+    }
+  ]
+}

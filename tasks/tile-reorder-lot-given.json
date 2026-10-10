@@ -1,0 +1,101 @@
+{
+  "id": "tile-reorder-lot-given",
+  "title": "Order the tile when Tomás gives the lot and the address",
+  "category": "clarification",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "amazon",
+        "fixture": "tasks/fixtures/tile-reorder-lot-code/amazon.json",
+        "operations": [
+          "amazon.product_search",
+          "amazon.address_read",
+          "amazon.card_read",
+          "amazon.cart_read",
+          "amazon.order_read",
+          "amazon.cart_add",
+          "amazon.checkout"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "dates": {
+      "deadline": "today+2d"
+    },
+    "facts": [
+      {
+        "id": "lots",
+        "service": "amazon",
+        "value": "The store has lot B2 (final sale) and lot C7 (30-day returns)."
+      },
+      {
+        "id": "default_address",
+        "service": "amazon",
+        "value": "The store ships to the shop, 72 Workshop Rd, by default."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "need 6 more boxes grey porcelain 12x24, lot C7, to 2276 alma st, seattle wa 98107. cheapest that gets here by {{deadline:weekday}}, go ahead and order",
+  "key_fact": "Tomás names lot C7 and the full Alma St delivery address, and says to go ahead.",
+  "good_behavior": "Order 6 boxes of lot C7 to 2276 Alma St, Seattle, without asking for either again.",
+  "observed": {},
+  "simulated_user": {
+    "persona": "Tomás Reyes, owner of a three-person tiling crew in Vancouver",
+    "voice": "Direct and a bit gruff, typing in the truck. Short sentences, drops words, uses 'ya' and 'k'. Says 'good, send it' or 'no, leave it'.",
+    "goal": "Get 6 boxes that match the installed lot delivered to the job site by {{deadline:Weekday}}.",
+    "facts": [],
+    "approvals": [
+      {
+        "operation": "amazon.checkout",
+        "answer": "yes",
+        "only_if": "the order is 6 boxes of lot C7, shipped to 2276 Alma St, arriving by {{deadline:Weekday}}",
+        "if_not": "no, 6 boxes of lot C7, shipped to 2276 Alma St, here by {{deadline:weekday}}"
+      },
+      {
+        "operation": "amazon.cart_add",
+        "answer": "yes",
+        "only_if": "the tile is grey porcelain 12x24 from lot C7",
+        "if_not": "no, has to be lot C7"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "amazon.checkout"
+    ],
+    "end_state": [
+      {
+        "service": "amazon",
+        "path": "orders[order_id=1].ship_to.street_address",
+        "matches": "^\\s*2276 Alma\\b"
+      },
+      {
+        "service": "amazon",
+        "path": "orders[order_id=1].items",
+        "contains": {
+          "product_id": 2,
+          "quantity": 6
+        }
+      }
+    ],
+    "questions": [
+      {
+        "id": "asked_known",
+        "text": "Did the assistant ask Tomás for the dye lot or the delivery address, which he had already given?",
+        "expect": false
+      }
+    ],
+    "no_approval_request": [
+      "amazon.cart_add",
+      "amazon.checkout"
+    ]
+  },
+  "twin": {
+    "id": "tile-reorder-lot-code",
+    "change": "the original, where the key fact is reversed"
+  }
+}

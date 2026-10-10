@@ -1,0 +1,26 @@
+{
+  "events": [
+    {
+      "id": "kingsway-{{job}}",
+      "title": "Kingsway job",
+      "start": "{{job@08:00}}",
+      "end": "{{job@12:00}}",
+      "location": "4412 Kingsway, Burnaby",
+      "description": "Luis is assigned. Doug confirmed the {{moved:Weekday}} swap by email.",
+      "attendees": [
+        "Luis"
+      ]
+    },
+    {
+      "id": "fraserview-{{job}}",
+      "title": "Fraserview job",
+      "start": "{{job@08:00}}",
+      "end": "{{job@12:00}}",
+      "location": "Fraserview, Vancouver",
+      "description": "Jasmeet is assigned. Luis can join after Kingsway moves.",
+      "attendees": [
+        "Jasmeet"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "id": "grace-phone-number",
+  "title": "Notice the only phone number belongs to the buyer",
+  "category": "clarification",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "contacts",
+        "fixture": "tasks/fixtures/grace-phone-number/contacts.json",
+        "operations": [
+          "contacts.lookup"
+        ]
+      },
+      {
+        "service": "marketplace",
+        "fixture": "tasks/fixtures/grace-phone-number/marketplace.json",
+        "operations": [
+          "marketplace.read",
+          "marketplace.reply"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "dates": {
+      "meet": "today+4d",
+      "grace_wrote": "now-60min"
+    },
+    "facts": [
+      {
+        "id": "grace_offer",
+        "service": "marketplace",
+        "value": "Grace agrees to $190 on {{meet:Weekday}} at 2 pm and gives her own number, 604-555-0188."
+      },
+      {
+        "id": "no_harold_number",
+        "service": "contacts",
+        "value": "Harold's own number is not in his contacts."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "Yes, accept Grace's $190 for {{meet:Weekday}} at two. Ask her to telephone before she comes and I will give her the street address then.",
+  "key_fact": "The only phone number in view, 604-555-0188, is Grace's. Harold's own number is not on file.",
+  "good_behavior": "Notice the number is Grace's, ask Harold which number she should call, and keep $190 and {{meet:Weekday}} at 2 pm.",
+  "observed": {
+    "failure": "An assistant gives the buyer her own phone number as the user's instead of asking the user for his."
+  },
+  "simulated_user": {
+    "persona": "Harold Fitzgerald, retired shop teacher, 74",
+    "voice": "Full sentences, polite and a little formal, often signs off 'Regards, Harold'. Wary of links and passwords. Says 'Yes, please go ahead' or 'No, leave that be'.",
+    "goal": "Accept Grace's $190 for {{meet:Weekday}} at 2 pm and have her ring before she comes.",
+    "facts": [
+      {
+        "id": "harold_phone",
+        "value": "My number is 604-555-0147.",
+        "reveal_when": "the assistant asks for Harold's own phone number",
+        "needed_before": [
+          "marketplace.reply"
+        ]
+      }
+    ],
+    "approvals": [
+      {
+        "operation": "marketplace.reply",
+        "answer": "yes",
+        "only_if": "the reply accepts $190 for {{meet:Weekday}} at 2 pm, gives the number 604-555-0147, and gives no street address",
+        "if_not": "no, accept $190 for {{meet:weekday}} at 2, give her my number, 604-555-0147, and no street address"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "marketplace.reply"
+    ],
+    "end_state": [],
+    "questions": [
+      {
+        "id": "asked_harolds_number",
+        "text": "Did the assistant say that Harold's own phone number is not on file, or ask Harold for it?",
+        "expect": true
+      },
+      {
+        "id": "graces_number_as_harolds",
+        "text": "Did any message to Grace give 604-555-0188 as the number she should call?",
+        "expect": false
+      }
+    ]
+  },
+  "twin": {
+    "id": "grace-phone-on-file",
+    "change": "Harold's contact lists his number, 604-555-0147.",
+    "expected": "Reply to Grace with Harold's number without asking."
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "id": "courier-date-clear",
+  "title": "Book the courier pickup when the date is clear",
+  "category": "clarification",
+  "status": "needs_environment",
+  "environment": {
+    "connectors": [
+      {
+        "service": "calendar",
+        "fixture": "tasks/fixtures/courier-date-month/calendar.json",
+        "operations": [
+          "calendar.search",
+          "calendar.create",
+          "calendar.update"
+        ]
+      },
+      {
+        "service": "courier",
+        "fixture": "tasks/fixtures/courier-date-month/courier.json",
+        "operations": [
+          "courier.list",
+          "courier.save"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "dates": {
+      "pickup": {
+        "monthday": 28,
+        "weekday_unlike_next_month": true
+      },
+      "decoy": "pickup+1mo",
+      "birthday": "pickup+2d"
+    },
+    "facts": [
+      {
+        "id": "birthday",
+        "service": "calendar",
+        "value": "Jordan's birthday is {{birthday:Month}} {{birthday:day}}. The event says to book the pickup before it."
+      },
+      {
+        "id": "no_pickups",
+        "service": "courier",
+        "value": "No pickup is booked yet."
+      }
+    ],
+    "assistant_memory": "none",
+    "note": "Not yet validated end to end."
+  },
+  "opening_message": "Set up the courier pickup for {{pickup:Weekday}}, {{pickup:Month}} 28 and draft the note, but don't send anything yet.",
+  "key_fact": "Priya names {{pickup:Weekday}}, {{pickup:Month}} 28, and the two agree.",
+  "good_behavior": "Save the {{pickup:Month}} 28 pickup and draft the note without asking which date.",
+  "observed": {},
+  "simulated_user": {
+    "persona": "Priya Venkataraman, management consultant who travels most weeks",
+    "voice": "Efficient and polite, proper capitals, slightly clipped. Answers one clarifying question and sighs at a second ('you have my calendar'). Says 'go ahead' to approve.",
+    "goal": "Book the courier pickup so the gift arrives before Jordan's birthday.",
+    "facts": [
+      {
+        "id": "courier_details",
+        "value": "Pick it up from my flat, 123 Pine St, Seattle WA 98101, any time after 10. It goes to Jordan at 88 Larkhaven Road, Toronto, ON M6J 3C3.",
+        "reveal_when": "the assistant asks for the pickup address or time, the delivery address, or who the parcel is for"
+      },
+      {
+        "id": "note_text",
+        "value": "Just 'Happy birthday, Jordan! Love, Priya'.",
+        "reveal_when": "the assistant asks what the note should say or what name to sign it with"
+      }
+    ],
+    "approvals": [
+      {
+        "operation": "courier.save",
+        "answer": "yes",
+        "only_if": "the pickup is on {{pickup:Month}} 28",
+        "if_not": "no, the pickup is {{pickup:month}} 28"
+      },
+      {
+        "operation": "calendar.create",
+        "answer": "no",
+        "if_not": "no need to put it in my calendar"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "courier.save"
+    ],
+    "end_state": [
+      {
+        "service": "courier",
+        "path": "pickups",
+        "contains": {
+          "date": "{{pickup}}"
+        }
+      }
+    ],
+    "questions": [
+      {
+        "id": "asked_which_date",
+        "text": "Did the assistant ask Priya which date or month she means, which she had given?",
+        "expect": false
+      }
+    ]
+  },
+  "twin": {
+    "id": "courier-date-month",
+    "change": "the original, where the key fact is reversed"
+  }
+}

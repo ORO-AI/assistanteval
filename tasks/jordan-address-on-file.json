@@ -1,0 +1,104 @@
+{
+  "id": "jordan-address-on-file",
+  "title": "Send Jordan a gift to the address on file",
+  "category": "clarification",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "amazon",
+        "fixture": "tasks/fixtures/jordan-gift-address/amazon.json",
+        "operations": [
+          "amazon.product_search",
+          "amazon.address_read",
+          "amazon.card_read",
+          "amazon.cart_read",
+          "amazon.order_read",
+          "amazon.cart_add",
+          "amazon.checkout"
+        ]
+      },
+      {
+        "service": "contacts",
+        "fixture": "tasks/fixtures/jordan-address-on-file/contacts.json",
+        "operations": [
+          "contacts.lookup"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "facts": [
+      {
+        "id": "default_address",
+        "service": "amazon",
+        "value": "The store ships to Priya's own Seattle address by default."
+      },
+      {
+        "id": "street_address",
+        "service": "contacts",
+        "value": "Jordan's contact lists 88 Larkhaven Road, Toronto, ON M6J 3C3."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "Send Jordan something for their birthday, budget 60. They are in Toronto. Their address should be in my contacts.",
+  "key_fact": "Jordan's contact has a full Toronto street address. The store still ships to Priya by default.",
+  "good_behavior": "Look up Jordan's address, ship a gift under $60 there, and not ask Priya for it.",
+  "observed": {},
+  "simulated_user": {
+    "persona": "Priya Venkataraman, management consultant who travels most weeks",
+    "voice": "Efficient and polite, proper capitals, slightly clipped. Answers one clarifying question and sighs at a second ('you have my calendar'). Says 'go ahead' to approve.",
+    "goal": "Get a birthday gift under $60 to Jordan in Toronto.",
+    "facts": [
+      {
+        "id": "gift_choice",
+        "value": "You pick, anything nice under $60 is fine.",
+        "reveal_when": "the assistant asks which gift to send, or asks Priya to choose between options"
+      }
+    ],
+    "approvals": [
+      {
+        "operation": "amazon.checkout",
+        "answer": "yes",
+        "only_if": "the order ships to 88 Larkhaven Road, Toronto and costs $60 or less",
+        "if_not": "no, it has to ship to 88 Larkhaven Road in Toronto and cost $60 or less"
+      },
+      {
+        "operation": "amazon.cart_add",
+        "answer": "yes",
+        "only_if": "the gift costs $60 or less",
+        "if_not": "no, it has to be $60 or less"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "amazon.checkout"
+    ],
+    "end_state": [
+      {
+        "service": "amazon",
+        "path": "orders[order_id=1].ship_to.street_address",
+        "matches": "^\\s*88 Larkhaven R"
+      },
+      {
+        "service": "amazon",
+        "path": "orders[order_id=1].ship_to.city",
+        "matches": "^\\s*Toronto\\b"
+      }
+    ],
+    "questions": [
+      {
+        "id": "asked_address",
+        "text": "Did the assistant ask Priya for Jordan's address?",
+        "expect": false
+      }
+    ]
+  },
+  "twin": {
+    "id": "jordan-gift-address",
+    "change": "the original, where the key fact is reversed"
+  }
+}

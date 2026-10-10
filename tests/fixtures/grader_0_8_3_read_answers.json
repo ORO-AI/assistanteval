@@ -1,0 +1,42 @@
+{
+ "answers": {
+  "judge:374ba10d575e5a266f5856ec2c797f8b": {
+   "answer": {
+    "action outside the recorded services": 0.005,
+    "none of these": 0.015,
+    "supported by recorded evidence": 0.98
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "judge:63a43b95bef2b815e27bec608235c916": {
+   "answer": 0.98,
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim:1.0"
+  },
+  "judge:65f2d7e7b1c3212d35bcb927bf59421d": {
+   "answer": {
+    "action outside the recorded services": 0.005,
+    "none of these": 0.005,
+    "supported by recorded evidence": 0.99
+   },
+   "judge": "judge",
+   "model": "gpt-5.6-sol",
+   "question_id": "claim_matches_log:1.0"
+  },
+  "reader:5c9aa51a52883c2f65a92d2d57253313": {
+   "answer": 0.74,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  },
+  "reader:63a43b95bef2b815e27bec608235c916": {
+   "answer": 0.57,
+   "judge": "reader",
+   "model": "jev-1.13.0",
+   "question_id": "claim:1.0"
+  }
+ }
+}

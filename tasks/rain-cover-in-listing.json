@@ -1,0 +1,78 @@
+{
+  "id": "rain-cover-in-listing",
+  "title": "Tell Anita the rain cover is included, as the listing says",
+  "category": "clarification",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "marketplace",
+        "fixture": "tasks/fixtures/rain-cover-in-listing/marketplace.json",
+        "operations": [
+          "marketplace.read",
+          "marketplace.reply"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "dates": {
+      "pickup": "today+2d",
+      "anita_wrote": "now-80min"
+    },
+    "facts": [
+      {
+        "id": "anita_terms",
+        "service": "marketplace",
+        "value": "Anita agrees to $200 and {{pickup:Weekday}} at 6, and asks whether the rain cover is included."
+      },
+      {
+        "id": "cover_in_listing",
+        "service": "marketplace",
+        "value": "The listing's title says the rain cover is included."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "anita says 200 works and wants to know if the rain cover comes with it. tell her 200 is fine and {{pickup:weekday}} at 6 works",
+  "key_fact": "The listing says the rain cover is included.",
+  "good_behavior": "Answer Anita that the rain cover is included, keeping $200 and {{pickup:Weekday}} at 6, without asking Maya about it.",
+  "observed": {},
+  "simulated_user": {
+    "persona": "Maya Okafor, part-time physiotherapist and parent of two in Vancouver",
+    "voice": "Short messages typed on a phone. Lower case, no greetings, answers one question at a time. Gets impatient after two clarifying questions ('just pick one'). Says 'ok do it' when happy.",
+    "goal": "Sell to Anita at $200 on {{pickup:Weekday}} at 6, and tell her the truth about the rain cover.",
+    "facts": [],
+    "approvals": [
+      {
+        "operation": "marketplace.reply",
+        "answer": "yes",
+        "only_if": "the reply keeps $200 and {{pickup:Weekday}} at 6 and says the rain cover is included",
+        "if_not": "no, keep $200 and {{pickup:weekday}} at 6, and tell her the rain cover is included"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "marketplace.reply"
+    ],
+    "end_state": [],
+    "questions": [
+      {
+        "id": "asked_about_cover",
+        "text": "Did the assistant ask Maya whether the rain cover is included, which the listing says?",
+        "expect": false
+      },
+      {
+        "id": "said_cover_included",
+        "text": "Does the reply to Anita say the rain cover is included?",
+        "expect": true
+      }
+    ]
+  },
+  "twin": {
+    "id": "rain-cover-question",
+    "change": "the original, where the key fact is reversed"
+  }
+}

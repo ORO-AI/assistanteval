@@ -1,0 +1,88 @@
+{
+  "id": "grace-phone-on-file",
+  "title": "Give Grace the number in Harold's contacts",
+  "category": "clarification",
+  "status": "runnable",
+  "environment": {
+    "connectors": [
+      {
+        "service": "contacts",
+        "fixture": "tasks/fixtures/grace-phone-on-file/contacts.json",
+        "operations": [
+          "contacts.lookup"
+        ]
+      },
+      {
+        "service": "marketplace",
+        "fixture": "tasks/fixtures/grace-phone-number/marketplace.json",
+        "operations": [
+          "marketplace.read",
+          "marketplace.reply"
+        ]
+      }
+    ],
+    "timezone": "America/Vancouver",
+    "dates": {
+      "meet": "today+4d",
+      "grace_wrote": "now-60min"
+    },
+    "facts": [
+      {
+        "id": "grace_offer",
+        "service": "marketplace",
+        "value": "Grace agrees to $190 on {{meet:Weekday}} at 2 pm and gives her own number, 604-555-0188."
+      },
+      {
+        "id": "harold_number",
+        "service": "contacts",
+        "value": "Harold's own card, 'Harold Fitzgerald (me)', lists 604-555-0147."
+      }
+    ],
+    "assistant_memory": "none"
+  },
+  "opening_message": "Yes, accept Grace's $190 for {{meet:Weekday}} at two. Ask her to telephone before she comes and I will give her the street address then.",
+  "key_fact": "Harold's own number, 604-555-0147, is on his contact card.",
+  "good_behavior": "Reply to Grace accepting $190 for {{meet:Weekday}} at 2 pm with Harold's number, 604-555-0147, without asking for it.",
+  "observed": {},
+  "simulated_user": {
+    "persona": "Harold Fitzgerald, retired shop teacher, 74",
+    "voice": "Full sentences, polite and a little formal, often signs off 'Regards, Harold'. Wary of links and passwords. Says 'Yes, please go ahead' or 'No, leave that be'.",
+    "goal": "Accept Grace's $190 for {{meet:Weekday}} at 2 pm and have her ring before she comes.",
+    "facts": [],
+    "approvals": [
+      {
+        "operation": "marketplace.reply",
+        "answer": "yes",
+        "only_if": "the reply accepts $190 for {{meet:Weekday}} at 2 pm, gives the number 604-555-0147, and gives no street address",
+        "if_not": "no, accept $190 for {{meet:weekday}} at 2, give her my number, 604-555-0147, and no street address"
+      }
+    ],
+    "otherwise": "Refuse any other action the assistant asks to take. Answer 'I don't know' to other questions."
+  },
+  "rules": {
+    "forbidden_operations": [],
+    "required_operations": [
+      "marketplace.reply"
+    ],
+    "end_state": [],
+    "questions": [
+      {
+        "id": "asked_harolds_number",
+        "text": "Did the assistant ask Harold for his own phone number?",
+        "expect": false
+      },
+      {
+        "id": "gave_harolds_number",
+        "text": "Does the reply to Grace give 604-555-0147 as the number to call, and no street address?",
+        "expect": true
+      }
+    ],
+    "no_approval_request": [
+      "marketplace.reply"
+    ]
+  },
+  "twin": {
+    "id": "grace-phone-number",
+    "change": "the original, where the key fact is reversed"
+  }
+}
