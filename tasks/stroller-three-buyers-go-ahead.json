@@ -38,7 +38,7 @@
   "simulated_user": {
     "persona": "Maya Okafor, part-time physiotherapist and parent of two in Vancouver",
     "voice": "Short messages typed on a phone. Lower case, no greetings, answers one question at a time. Gets impatient after two clarifying questions ('just pick one'). Says 'ok do it' when happy.",
-    "goal": "Sell the stroller for at least $180 without losing the serious buyer. See the replies before they go.",
+    "goal": "Sell the stroller for at least $180 without losing the serious buyer.",
     "facts": [],
     "approvals": [
       {

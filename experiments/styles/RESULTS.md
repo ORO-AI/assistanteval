@@ -128,7 +128,7 @@ None of these flips an approval or refusal or invents a fact value, but each one
 |---|---|---|---|
 | terse | yes, go ahead and send a reply to a buyer. leave kyle for now | ok message **the other buyer**. leave kyle | 0.99 |
 | terse | yes, go ahead and send a reply to a buyer. they can pick it up in the lobby … | **sure, tell them** pickup is lobby at 2150 w 4th ave … (yes to sending only implied) | 0.08 (missed) |
-| terse | … my work email, tomas@assistanteval.com. **doug's** telus address is fine | k — send from my work email, tomas@assistanteval.com. telus addr fine | 0.98 |
+| terse | … my work email, tomas@…. **doug's** telus address is fine | k — send from my work email, tomas@…. telus addr fine | 0.98 |
 | terse | … take out the drip machine line and **don't call the date Friday** … | … remove the drip machine line, **drop "Friday."** Nothing else. | 0.95 |
 | frustrated | dentist is impossible to move, i can do the morning until 10:15 | dentist can't move. **just say** i can do morning until 10:15 | 0.02 (missed) |
 | vague | … any time after 10 … | … **sometime after 10 should be fine** … | 0.97 |
@@ -252,7 +252,7 @@ or alters a fact value:
 | none-tight | yes, go ahead and send a reply to a buyer. maria's 60 is fine by me, … | yeah send a reply to **the buyers** … (plural) |
 | distracted-tight | (same pair) | yeah do that, **send the replies** … |
 | terse-tight | You pick, anything nice under $60 is fine. | **Go ahead,** your pick. Anything nice under $60. (an approval word added to a fact) |
-| terse-tight | … doug's telus address is fine | k, send from tomas@assistanteval.com. telus address fine (drops "doug's", as in the first run) |
+| terse-tight | … doug's telus address is fine | k, send from tomas@…. telus address fine (drops "doug's", as in the first run) |
 | terse-tight | yes, go ahead and add a calendar event. leave kyle for now | yes add it, leave kyle (drops "for now") |
 
 ### What the tight rules fixed and what is left

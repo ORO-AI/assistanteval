@@ -98,6 +98,11 @@ def written_since_reply(turns: list[Turn]) -> list[Turn]:
     ]
 
 
+def _earlier(turns: list[Turn]) -> list[str]:
+    """The messages before the latest, as the judges are shown them."""
+    return [f"{t.role}: {t.text}" for t in turns[-CONTEXT_TURNS - 1 : -1]]
+
+
 def approval(operation: str) -> str:
     """The fixed "yes" for one action, naming it."""
     return FIXED["approve"].format(action=describe(operation)[1] or operation)
@@ -324,7 +329,7 @@ class SimulatedUser:
     def _read(self, turns: list[Turn], assistant_turn: str) -> tuple[str, bool]:
         """What the turn does, and whether a judge is sure. The reader reads it first;
         if the reader is split, the rules judge (an LLM) reads it too."""
-        earlier = [f"{t.role}: {t.text}" for t in turns[-CONTEXT_TURNS - 1 : -1]]
+        earlier = _earlier(turns)
         state = {"assistant_turn": assistant_turn, "earlier_messages": earlier}
         # A request for the user's facts comes first, even when the same message also offers to act.
         # A fact is given once: asked again, the assistant already has it.
@@ -386,7 +391,7 @@ class SimulatedUser:
         self, turns: list[Turn], assistant_turn: str, needed: set[str]
     ) -> str | None:
         """The action with an approval rule, other than those in `needed`, that the turn asks to do now."""
-        earlier = [f"{t.role}: {t.text}" for t in turns[-CONTEXT_TURNS - 1 : -1]]
+        earlier = _earlier(turns)
         for rule in self.user["approvals"]:
             if rule["operation"] in needed:
                 continue
@@ -406,7 +411,7 @@ class SimulatedUser:
         return None
 
     def _offers_more(self, turns: list[Turn], assistant_turn: str) -> bool:
-        earlier = [f"{t.role}: {t.text}" for t in turns[-CONTEXT_TURNS - 1 : -1]]
+        earlier = _earlier(turns)
         question = Question(
             "user_hears_offer",
             "yes_no",
@@ -424,7 +429,8 @@ class SimulatedUser:
         asks the reader the same question, so the judge is the independent
         check. With the reader alone, independent models rejected about a
         third of these readings."""
-        earlier = [f"{t.role}: {t.text}" for t in turns[-CONTEXT_TURNS - 1 : -1]]
+        earlier = _earlier(turns)
+        judges = [self.reader] + ([self.rules] if self.rules is not self.reader else [])
         for rule in self.user["approvals"]:
             question = Question(
                 "user_hears_proposal:" + rule["operation"],
@@ -435,9 +441,6 @@ class SimulatedUser:
                     "earlier_messages": earlier,
                     "action": describe(rule["operation"])[1] or rule["operation"],
                 },
-            )
-            judges = [self.reader] + (
-                [self.rules] if self.rules is not self.reader else []
             )
             if all(
                 read("yes_no", self._ask(j, question)) == (True, True) for j in judges
@@ -461,9 +464,7 @@ class SimulatedUser:
             "A draft it refers to may be in `earlier_messages`.",
             {
                 "assistant_turn": assistant_turn,
-                "earlier_messages": [
-                    f"{t.role}: {t.text}" for t in turns[-CONTEXT_TURNS - 1 : -1]
-                ],
+                "earlier_messages": _earlier(turns),
                 "condition": rule["only_if"],
             },
         )
