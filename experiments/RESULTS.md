@@ -101,11 +101,12 @@ answers:
 
 | Live records | Without CHECKER | With CHECKER |
 |---|---|---|
-| Published code (32) | 9 waiting for a person | **1** (13 questions answered by the checker) |
-| This branch (32) | 6 waiting for a person | **0** (7 answered by the checker) |
+| Published code (32) | 9 waiting for a person | **7** (6 questions answered by the checker) |
+| This branch (32) | 6 waiting for a person | **3** (4 answered by the checker) |
 
-The settled runs split into passes and failures (published code: 8 → 13 pass,
-15 → 18 fail), as an independent check should.
+An earlier version of the checker also answered the question a person alone
+decides (whether a result holds despite the simulated user's misreadings) and
+appeared to clear every pending run; it now answers reader-only re-checks only.
 
 A small sample, and outcomes also move with the assistant's own variation, but
 every measure moves the expected way. No assistant offered more help in these
@@ -169,7 +170,11 @@ Ben, the user answered "no, leave it for now", and the run passed.
 1. Adopt simulated user version 2 (declines, careful routing, tight writer
    prompt) for new runs, and publish its version with the scores.
 2. Add a CHECKER to the official setup (Gemini 3.1 Pro measured here): it cuts
-   runs sent to a person by about a third.
+   disputed readings by about a third in the replay, and live runs waiting for a
+   person from 6 to 3 with this branch. On the published records it agreed with
+   31 of the 34 adjudications it could answer; most adjudications overruled a
+   confident model answer, which no checker revisits, so it does not replace
+   review.
 3. Grow task preferences with `gaps.py` plus a person's review, as tasks are
    run against new assistants.
 4. Calibrate the reader on short rewordings: it rejects faithful short replies
