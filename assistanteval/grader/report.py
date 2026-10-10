@@ -104,8 +104,10 @@ def _print(rows: list[dict], overall: list[dict], skipped: list[dict]) -> None:
         print(f"skipped {s['run']}: {s['error']}")
 
 
-def main(argv: list[str] | None = None, store=AnswerStore) -> int:
-    """`store`: the answers file's class (see `grader.__main__.main`)."""
+def main(argv: list[str] | None = None, store=AnswerStore, folders=run_folders) -> int:
+    """`store`: the answers file's class (see `grader.__main__.main`).
+    `folders(root)`: the run folders under root, for a host that keeps other
+    folders there (such as retried attempts)."""
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("runs", type=Path, help="folder that holds one folder per run")
     parser.add_argument("--out", type=Path, default=Path("grades"))
@@ -121,7 +123,7 @@ def main(argv: list[str] | None = None, store=AnswerStore) -> int:
     skipped = []  # runs that could not be read, so no product or task is known
     graded: set[str] = set()  # a second run with the same id would overwrite it
     try:
-        for folder in run_folders(args.runs):
+        for folder in folders(args.runs):
             try:
                 record = run_record.load(folder)
                 if not TASK_ID.fullmatch(record.task_id):

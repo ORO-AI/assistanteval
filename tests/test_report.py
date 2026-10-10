@@ -193,3 +193,19 @@ def test_a_run_whose_grading_fails_is_skipped_not_fatal(tmp_path, monkeypatch, c
     # Every run failing (a revoked key, an outage) is an error, not a clean report.
     monkeypatch.setattr(report, "grade", lambda *a: 1 / 0)
     assert report.main([str(tmp_path / "runs"), *common]) == 1
+
+
+def test_a_host_chooses_which_folders_are_runs(tmp_path, common):
+    """A host that keeps other folders under its runs (retried attempts, say)
+    passes its own run finder."""
+    for run_id in ("r1", "attempt-1"):
+        run_record.save(run(run_id), tmp_path / "runs" / run_id)
+
+    def runs_only(root):
+        return [
+            f for f in report.run_folders(root) if not f.name.startswith("attempt-")
+        ]
+
+    report.main([str(tmp_path / "runs"), *common], folders=runs_only)
+    graded = sorted(p.name for p in (tmp_path / "grades").iterdir() if p.is_dir())
+    assert graded == ["r1"]
