@@ -20,7 +20,9 @@ from assistanteval import run_record
 from assistanteval.grader import AnswerStore, grade, ladder_from_env
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, store=AnswerStore) -> int:
+    """`store`: the answers file's class, for a host whose saved answers need
+    reading another way."""
     parser = argparse.ArgumentParser(description="Grade one run record.")
     parser.add_argument("run", type=Path, help="run record folder")
     parser.add_argument(
@@ -39,7 +41,7 @@ def main(argv: list[str] | None = None) -> int:
 
     record = run_record.load(args.run)
     out = args.out or Path("grades") / Path(record.run_id).name
-    store = AnswerStore(args.answers)
+    store = store(args.answers)
     ladder = ladder_from_env(store, args.offline)
     try:
         verdict = grade(record, ladder)

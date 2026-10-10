@@ -40,7 +40,7 @@ from pathlib import Path
 from typing import Callable
 
 from assistanteval import connectors, dates, endpoints, run_record
-from assistanteval.contracts import Assistant, EpisodeStepError, Message
+from assistanteval.contracts import Assistant, EpisodeStepError, Message, Stop
 from assistanteval.grader.judges import JudgeError
 from assistanteval.run_record import RunRecord, Service, Turn
 from assistanteval.task import load as load_task
@@ -64,14 +64,6 @@ ASSISTANTS = {
 }
 
 
-class Stop(Exception):
-    """A stop signal or the run's deadline: save the record and release."""
-
-    def __init__(self, code: str = "stopped"):
-        super().__init__(code)
-        self.code = code
-
-
 def _resolve(entry: str):
     module, _, name = entry.partition(":")
     return getattr(importlib.import_module(module), name)
@@ -93,6 +85,7 @@ def simulated_user(task: dict):
         judge_for(endpoint("READER")) or judge,
         writer and LLMWriter(writer),
         rules=judge,
+        style=os.environ.get("ASSISTANTEVAL_USER_STYLE") or None,
     )
 
 
@@ -227,13 +220,16 @@ def _code(error: BaseException) -> str:
 
 
 def _runner_version() -> str:
-    # A checkout knows its commit; an installed package records it.
-    try:
-        revision = subprocess.run(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
-        ).stdout.strip()
-    except OSError:  # no git where the runner runs
-        revision = ""
+    # A checkout knows its commit; an installed package records it (asking
+    # git there would name whichever repository the package is installed in).
+    revision = ""
+    if (ROOT / ".git").exists():
+        try:
+            revision = subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
+            ).stdout.strip()
+        except OSError:  # no git where the runner runs
+            pass
     revision = revision or os.environ.get("ASSISTANTEVAL_REVISION") or "unknown"
     return f"assistanteval.run_task at {revision}"
 
@@ -446,7 +442,7 @@ def _manifest(common: dict, user_record: dict | None, rendered, timezone: str) -
 
 
 @contextmanager
-def _stop_on_signals():
+def stop_on_signals():
     """Stop on SIGTERM or SIGHUP, and at the run's hard deadline (one alarm)."""
 
     def stop(signum, _frame):
@@ -482,7 +478,7 @@ def main(argv=None) -> int:
     name = args.assistant.rpartition(":")[2]
     out_dir = args.out or Path("runs") / f"{name}-{task['id']}-{stamp}"
     factory = _resolve(ASSISTANTS.get(args.assistant, args.assistant))
-    with _stop_on_signals():
+    with stop_on_signals():
         record = run_task(
             task,
             args.assistant,

@@ -129,6 +129,8 @@ What ran, for provenance. The grader reads only `world`.
 
 ```json
 {
+  "version": 2,
+  "style": null,
   "model": "<writer model>",
   "reader_model": "<reader model>",
   "rules_model": "<judge model>",
@@ -153,7 +155,8 @@ What ran, for provenance. The grader reads only `world`.
 ```
 
 - **`saw`** is how the simulated user read the assistant's last turn: `asks_for:<fact_id>`, `asks_approval:<operation>`, `finished`, `asks_other`, `no_progress`, or `unsure:<reading>` when neither the reader nor the judge was sure (the user then says it doesn't know rather than end, approve or reveal on a guess).
-- **`action`** is `reveal`, `approve`, `refuse`, `dont_know`, `wait`, `nudge` or `end`. Only `wait` and `end` send nothing.
+- **`action`** is `reveal`, `approve`, `refuse`, `dont_know`, `decline` ("no thanks, that's all for now", to an offer of more help), `wait`, `nudge` or `end`. Only `wait` and `end` send nothing.
+- **`version`** is the simulated user's behaviour version (absent before 2), and **`style`** the wording style (`terse`, `distracted` or null).
 - **`answers`** are the judge answers behind the decision, in order, so a decision can be audited or replayed.
 - **`at_ms`** is the time passed to `reply()`; the grader uses the time of the user turn that carried the message.
 - **`sent`** is `false` on a reply the turn limit stopped (decided, never sent), and absent otherwise.

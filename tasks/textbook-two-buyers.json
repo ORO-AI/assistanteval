@@ -53,6 +53,11 @@
         "id": "which_buyer",
         "value": "maria's 60 is fine by me, jayden would have to come up to 60. show me what you'd send first",
         "reveal_when": "the assistant asks which buyer to reply to or sell to, or whether to hold the book for one of them"
+      },
+      {
+        "id": "payment_method",
+        "value": "whatever's easiest for her tbh",
+        "reveal_when": "the assistant asks how Sam prefers to receive payment"
       }
     ],
     "approvals": [

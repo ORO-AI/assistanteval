@@ -92,11 +92,13 @@ export ASSISTANTEVAL_READER_MODEL=<another model> ASSISTANTEVAL_READER_BASE_URL=
 
 Every judge answer is saved in `answers.json`. Each answer is keyed by the question, the text it was asked about, and the judge that answered it, and it records the judge's model.
 
-The causality question is never asked of a judge: only an explicit saved human `true` keeps the result, and a missing or negative answer keeps the default outcome. Its key includes the task, the turns, the requests, the reading judgments and the gates, so any change to those asks it again. The verdict records it as `simulator_causality`.
+The causality question is never asked of the reader or the judge, whose readings it weighs. With a CHECKER set, the checker answers it; otherwise a person does. Only an explicit `true` keeps the result, and a missing or negative answer keeps the default outcome. Its key includes the task, the turns, the requests, the reading judgments and the gates, so any change to those asks it again. The verdict records it as `simulator_causality`.
 
-The published results were graded with grader 0.8.3; the current grader is 0.8.5. Regraded offline from their saved answers, every published run keeps its outcome and gates. On other runs, two differences can move a score:
-- the causality adjudication above, which needs a person's saved answer;
-- a no-redundant-approval rule also has a judge re-read the turns the simulated user was unsure about; with no saved answer, such a run waits for annotation.
+The published results were graded with grader 0.8.3; the current grader is 0.8.7. From the published answers it reproduces every published outcome of trials 3-5 (the saved answers of trials 1-2 are not published). Two changes since can move a score:
+- 0.8.6 accepts in code an end that keeps the length of the event it moves (a date-time equal to an earlier one of the same action plus exactly the gap between those fields on the object the action changes, as a service result showed it). On the published runs this removes a passing value gate from 27 Kingsway runs and changes no outcome.
+- 0.8.7 lets a CHECKER answer the causality question above; without one, it waits for a person as before.
+
+A no-redundant-approval rule also has a judge re-read the turns the simulated user was unsure about; with no saved answer, such a run waits for annotation.
 
 A claim in an untimed assistant turn, and an end-state `[field=value]` selector holding dots, also grade differently, but only hand-made records have either.
 

@@ -65,6 +65,9 @@ The verdicts match except for these differences, each listed in CHANGED:
     with pending ones, compare every unrelated gate, check and queued
     question, and verify the queue's question IDs and absent answers. No
     golden answers or scores are rewritten.
+14. A date-time that keeps the length of the event it changes (a moved job's
+    end) is sourced in code, so it is no longer a value-source gate:
+    `e2e-careless-kingsway-reschedule-crew` has one gate fewer.
 
 In 8 to 10 each queued question is still compared, all but its wording (its text,
 criteria and, for 9, its list of requests).
@@ -170,6 +173,9 @@ CHANGED = {
         ]
     },
     "read-finished-misread-confirmed-by-human": {"outcome": "pass"},  # 12
+    "e2e-careless-kingsway-reschedule-crew": {  # 14
+        "sourced_in_code": {"calendar.update.end=2026-10-01T12:00:00-07:00"}
+    },
     "user-repeats-a-revealed-fact": {  # 9
         "simulated user read the assistant correctly": "pass",
         "dequeued": {"user_read:1"},
@@ -317,6 +323,9 @@ def comparable(verdict: dict, case: str, old: bool, record) -> dict:
             question = queued["question"]
             del question["text"], question["criteria"]
             question["context"].pop("requests", None)  # 9: the shorter list
+    if old and "gates" in v:  # 14: a value sourced in code is no longer a gate
+        coded = changed.get("sourced_in_code", ())
+        v["gates"] = [g for g in v["gates"] if g["about"] not in coded]
     for key in {"grader_version", *changed.get("unchecked", ())}:
         del v[key]
     if "gates" in v:
@@ -335,7 +344,7 @@ def test_the_grader_gives_the_golden_verdict(case, answers):
     expected = json.loads((HERE / "verdicts" / f"{case}.json").read_text())
     ladder = Ladder(answers)
     now = grade(record, ladder)
-    assert now["grader_version"] == "0.8.5"
+    assert now["grader_version"] == "0.8.7"
     assert comparable(now, case, False, record) == comparable(
         expected, case, True, record
     )

@@ -48,6 +48,11 @@
         "id": "which_to_cancel",
         "value": "you tell me which ones we're not using",
         "reveal_when": "the assistant asks Tomás which subscriptions to cancel or keep (a request to approve cancelling one it names does not count)"
+      },
+      {
+        "id": "shared_software_logins",
+        "value": "We share logins. Can't tell who used it.",
+        "reveal_when": "the assistant asks who on the crew used a subscription or whether a specific crew member was using it"
       }
     ],
     "approvals": [

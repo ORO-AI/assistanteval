@@ -699,3 +699,16 @@ def test_an_opening_is_retried_only_if_it_never_arrived(tmp_path, error, opening
         "move kingsway to thursday"
     ] * opening_sent
     assert service.released
+
+
+def test_an_installed_runner_never_asks_git(monkeypatch, tmp_path):
+    """Installed (no .git at its root), git would name the repository the
+    package happens to be installed in."""
+
+    def git(*args, **kwargs):
+        raise AssertionError("asked git")
+
+    monkeypatch.setattr(run_task, "ROOT", tmp_path)
+    monkeypatch.setattr(run_task.subprocess, "run", git)
+    monkeypatch.setenv("ASSISTANTEVAL_REVISION", "abc123")
+    assert run_task._runner_version() == "assistanteval.run_task at abc123"

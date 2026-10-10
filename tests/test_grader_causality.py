@@ -67,7 +67,7 @@ def test_only_explicit_independence_can_preserve_an_otherwise_invalid_result(
     confirmed = run(rec, answers, store=store)
     assert confirmed["outcome"] == "invalid"
     q = Question(**confirmed["simulator_causality"]["question"])
-    assert q.rungs == ()
+    assert not {"reader", "judge"} & set(q.rungs)  # never the readings it weighs
     if independent is not None:
         store.put(HUMAN, HUMAN, q, independent)
     reviewed = run(rec, answers, store=store)
@@ -233,3 +233,23 @@ def test_uncertain_live_readings_are_rechecked_without_assuming_their_top_choice
     )
     gate = results(verdict)["task rule: did not ask to approve calendar.update"]
     assert gate == result
+
+
+def test_a_checker_answers_the_causality_question_the_judges_never_see():
+    """With a CHECKER, its yes keeps the result a disputed reading would void;
+    the reader and the judge are still never asked."""
+    rec, answers, _ = case("pass")
+    answers["user_read"] = 0.5
+    reader = ScriptedJudge("reader", answers)
+    judge = ScriptedJudge("judge", answers)
+    checker = ScriptedJudge(
+        "checker", {**answers, "result_independent_of_simulator": 0.95}
+    )
+    reviewed = grade(
+        rec, Ladder(AnswerStore(), reader=reader, judge=judge, checker=checker)
+    )
+    assert reviewed["simulator_causality"]["decided_by"] == "checker"
+    assert reviewed["outcome"] == "pass"
+    assert all(
+        q.id != "result_independent_of_simulator" for q in reader.seen + judge.seen
+    )

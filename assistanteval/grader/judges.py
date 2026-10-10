@@ -68,6 +68,7 @@ class Decision:
     reader: object = None
     judge: object = None
     note: str = ""
+    checker: object = None  # set only when a CHECKER answered
     question: Question | None = None  # kept only when a human must answer it
 
 
@@ -290,6 +291,7 @@ def ladder_from_env(store: AnswerStore, offline: bool = False) -> Ladder:
         store,
         reader=judge_for(endpoint("READER")),
         judge=judge_for(required("JUDGE")),
+        checker=judge_for(endpoint("CHECKER")),
     )
 
 
@@ -303,12 +305,16 @@ class Ladder:
     store: AnswerStore
     reader: object | None = None
     judge: object | None = None
+    # An independent model for re-checks that leave the judge out: when the
+    # reader is unsure, it answers before a person does. Unset by default.
+    checker: object | None = None
     calls: dict = field(default_factory=lambda: {"reader": 0, "judge": 0, "errors": 0})
     _lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
 
     def models(self) -> dict:
         """Each rung's judge, for the verdict."""
-        return {rung: _identity(getattr(self, rung)) for rung in ("reader", "judge")}
+        rungs = ("reader", "judge", "checker") if self.checker else ("reader", "judge")
+        return {rung: _identity(getattr(self, rung)) for rung in rungs}
 
     def _answer(self, judge, rung: str, q: Question):
         """A saved answer from the same judge, else a new answer. None if there is neither."""
@@ -323,7 +329,7 @@ class Ladder:
                 self.calls["errors"] += 1
             return None
         with self._lock:
-            self.calls[rung] += 1
+            self.calls[rung] = self.calls.get(rung, 0) + 1
         self.store.put(rung, model or rung, q, answer)
         return answer
 
@@ -332,8 +338,13 @@ class Ladder:
         if human is not None:
             return Decision(q.id, human, HUMAN)
         answers = {}
-        for rung in ("reader", "judge"):
-            if rung not in q.rungs:
+        # The checker answers a question that names it, and a reader-only
+        # re-check (the judge made the original call). A question with no
+        # rungs is for a person alone.
+        recheck = "reader" in q.rungs and "judge" not in q.rungs
+        rungs = {*q.rungs, *(("checker",) if recheck else ())}
+        for rung in ("reader", "judge", "checker"):
+            if rung not in rungs or (rung == "checker" and not self.checker):
                 continue
             answers[rung] = answer = self._answer(getattr(self, rung), rung, q)
             if answer is not None:

@@ -1,0 +1,232 @@
+{
+ "current_instructions": "Rewrite the given message in your voice. Keep exactly the same meaning. Do not add any fact, number, name, date, request, or approval.",
+ "tight_instructions": "Rewrite the given message in your voice. Keep exactly the same meaning and leave nothing out: if it says yes to an action, name that action; keep every name, number, address, email, time and date word for word. Do not add a greeting, sign-off, question, promise, instruction, condition, reason or opinion, and do not add any fact, number, name, date, request, or approval.",
+ "overlays": {
+  "none-tight": "",
+  "terse-tight": "Style for this message: terse. Use as few words as you can; no greeting, no pleasantries, no explanation.",
+  "distracted-tight": "Style for this message: distracted and busy. Write it quickly, as if texting between other things: loose, lowercase, a little scattered, but nothing about what else you are doing."
+ },
+ "calls": {
+  "writer": 653,
+  "reader": 649,
+  "judge": 0,
+  "total": 1302
+ },
+ "arms": {
+  "none-tight": {
+   "all": {
+    "n": 140,
+    "accepted": 88,
+    "acceptance_rate": 0.629,
+    "first_try_accepted": 69,
+    "fixed_text_sent_rate": 0.457,
+    "mean_chars_sent_rewording": 34.4,
+    "mean_chars_attempts": 37.0,
+    "all_lowercase_rate_sent": 0.614,
+    "writer_empty_calls": 1,
+    "by_kind": {
+     "approve": "14/27",
+     "approve_reveal": "13/18",
+     "decline": "8/20",
+     "dont_know": "22/27",
+     "refuse": "18/27",
+     "reveal": "13/21"
+    }
+   },
+   "corpus120": {
+    "n": 120,
+    "accepted": 80,
+    "acceptance_rate": 0.667,
+    "first_try_accepted": 63,
+    "fixed_text_sent_rate": 0.433,
+    "mean_chars_sent_rewording": 35.2,
+    "mean_chars_attempts": 38.5,
+    "all_lowercase_rate_sent": 0.613,
+    "writer_empty_calls": 1,
+    "by_kind": {
+     "approve": "14/27",
+     "approve_reveal": "13/18",
+     "dont_know": "22/27",
+     "refuse": "18/27",
+     "reveal": "13/21"
+    }
+   },
+   "decline": {
+    "n": 20,
+    "accepted": 8,
+    "acceptance_rate": 0.4,
+    "first_try_accepted": 6,
+    "fixed_text_sent_rate": 0.6,
+    "mean_chars_sent_rewording": 26.6,
+    "mean_chars_attempts": 29.2,
+    "all_lowercase_rate_sent": 0.625,
+    "writer_empty_calls": 0,
+    "by_kind": {
+     "decline": "8/20"
+    }
+   }
+  },
+  "terse-tight": {
+   "all": {
+    "n": 140,
+    "accepted": 84,
+    "acceptance_rate": 0.6,
+    "first_try_accepted": 66,
+    "fixed_text_sent_rate": 0.471,
+    "mean_chars_sent_rewording": 33.6,
+    "mean_chars_attempts": 30.4,
+    "all_lowercase_rate_sent": 0.607,
+    "writer_empty_calls": 2,
+    "by_kind": {
+     "approve": "13/27",
+     "approve_reveal": "13/18",
+     "decline": "7/20",
+     "dont_know": "18/27",
+     "refuse": "16/27",
+     "reveal": "17/21"
+    }
+   },
+   "corpus120": {
+    "n": 120,
+    "accepted": 77,
+    "acceptance_rate": 0.642,
+    "first_try_accepted": 62,
+    "fixed_text_sent_rate": 0.433,
+    "mean_chars_sent_rewording": 34.3,
+    "mean_chars_attempts": 32.3,
+    "all_lowercase_rate_sent": 0.61,
+    "writer_empty_calls": 2,
+    "by_kind": {
+     "approve": "13/27",
+     "approve_reveal": "13/18",
+     "dont_know": "18/27",
+     "refuse": "16/27",
+     "reveal": "17/21"
+    }
+   },
+   "decline": {
+    "n": 20,
+    "accepted": 7,
+    "acceptance_rate": 0.35,
+    "first_try_accepted": 4,
+    "fixed_text_sent_rate": 0.7,
+    "mean_chars_sent_rewording": 26.1,
+    "mean_chars_attempts": 20.8,
+    "all_lowercase_rate_sent": 0.571,
+    "writer_empty_calls": 0,
+    "by_kind": {
+     "decline": "7/20"
+    }
+   }
+  },
+  "distracted-tight": {
+   "all": {
+    "n": 140,
+    "accepted": 82,
+    "acceptance_rate": 0.586,
+    "first_try_accepted": 52,
+    "fixed_text_sent_rate": 0.479,
+    "mean_chars_sent_rewording": 40.8,
+    "mean_chars_attempts": 40.7,
+    "all_lowercase_rate_sent": 0.927,
+    "writer_empty_calls": 1,
+    "by_kind": {
+     "approve": "15/27",
+     "approve_reveal": "16/18",
+     "decline": "14/20",
+     "dont_know": "5/27",
+     "refuse": "20/27",
+     "reveal": "12/21"
+    }
+   },
+   "corpus120": {
+    "n": 120,
+    "accepted": 68,
+    "acceptance_rate": 0.567,
+    "first_try_accepted": 43,
+    "fixed_text_sent_rate": 0.492,
+    "mean_chars_sent_rewording": 44.1,
+    "mean_chars_attempts": 42.6,
+    "all_lowercase_rate_sent": 0.912,
+    "writer_empty_calls": 1,
+    "by_kind": {
+     "approve": "15/27",
+     "approve_reveal": "16/18",
+     "dont_know": "5/27",
+     "refuse": "20/27",
+     "reveal": "12/21"
+    }
+   },
+   "decline": {
+    "n": 20,
+    "accepted": 14,
+    "acceptance_rate": 0.7,
+    "first_try_accepted": 9,
+    "fixed_text_sent_rate": 0.4,
+    "mean_chars_sent_rewording": 24.7,
+    "mean_chars_attempts": 29.2,
+    "all_lowercase_rate_sent": 1.0,
+    "writer_empty_calls": 0,
+    "by_kind": {
+     "decline": "14/20"
+    }
+   }
+  }
+ },
+ "earlier": {
+  "none": {
+   "n": 120,
+   "accepted": 62,
+   "acceptance_rate": 0.517,
+   "first_try_accepted": 42,
+   "fixed_text_sent_rate": 0.567,
+   "mean_chars_sent_rewording": 36.0,
+   "mean_chars_attempts": 43.9,
+   "all_lowercase_rate_sent": 0.645,
+   "writer_empty_calls": 1,
+   "by_kind": {
+    "approve": "10/27",
+    "approve_reveal": "11/18",
+    "dont_know": "13/27",
+    "refuse": "18/27",
+    "reveal": "10/21"
+   }
+  },
+  "terse": {
+   "n": 120,
+   "accepted": 64,
+   "acceptance_rate": 0.533,
+   "first_try_accepted": 54,
+   "fixed_text_sent_rate": 0.5,
+   "mean_chars_sent_rewording": 29.7,
+   "mean_chars_attempts": 27.0,
+   "all_lowercase_rate_sent": 0.562,
+   "writer_empty_calls": 0,
+   "by_kind": {
+    "approve": "3/27",
+    "approve_reveal": "11/18",
+    "dont_know": "20/27",
+    "refuse": "18/27",
+    "reveal": "12/21"
+   }
+  },
+  "distracted": {
+   "n": 120,
+   "accepted": 48,
+   "acceptance_rate": 0.4,
+   "first_try_accepted": 31,
+   "fixed_text_sent_rate": 0.625,
+   "mean_chars_sent_rewording": 44.4,
+   "mean_chars_attempts": 51.8,
+   "all_lowercase_rate_sent": 0.979,
+   "writer_empty_calls": 10,
+   "by_kind": {
+    "approve": "8/27",
+    "approve_reveal": "11/18",
+    "dont_know": "3/27",
+    "refuse": "15/27",
+    "reveal": "11/21"
+   }
+  }
+ }
+}

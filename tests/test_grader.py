@@ -21,6 +21,7 @@ from assistanteval.grader.grade import (
     claims_match_log,
     conversation_starts_with_task,
     sentences,
+    values_have_sources,
 )
 from assistanteval.grader.judges import HUMAN, Asking, JudgeError
 from assistanteval.run_record import Request, RunRecord, Turn
@@ -35,6 +36,7 @@ from tests.records import (
     GOOD,
     OPENING,
     REPLY,
+    SEARCH_OUT,
     UPDATE_IN,
     ScriptedJudge,
     record,
@@ -180,6 +182,62 @@ def test_the_judge_may_count_the_account_holders_name_as_the_users_own(
     assert asked.context.get("account_holder") == holder
     assert ("account_holder" in asked.text) == bool(holder)  # seen by a person too
     assert verdict["outcome"] == outcome
+
+
+def value_source_questions(end: str, **update) -> dict:
+    """The values asked about when Kingsway (8 to 12 on the 28th, as the search
+    showed) is moved to start at 8 on October 1 and end at `end`."""
+    event = {**SEARCH_OUT["events"][0], "end": "2026-09-28T12:00:00-07:00"}
+    moved = {**UPDATE_IN, "end": end, **update}
+    requests = [
+        record().requests[0],
+        Request(
+            "calendar",
+            "calendar.search",
+            30,
+            {"query": "Kingsway"},
+            {"events": [event]},
+        ),
+        Request("calendar", "calendar.update", 40, moved, {**event, **moved}),
+    ]
+    judge = ScriptedJudge("reader", {"value_source": 0.05})
+    with Asking(Ladder(AnswerStore(), reader=judge, judge=judge)) as ask:
+        gates = list(
+            values_have_sources(record(requests), Task.model_validate(task()), ask)
+        )
+    asked = {q.context["field"]: q.context["value"] for q in judge.seen}
+    return asked, [
+        (g.result, g.decided_by) for g in gates if g.about.endswith(".end=" + end)
+    ]
+
+
+def test_an_event_moved_with_its_length_kept_has_its_end_sourced_in_code():
+    """Kingsway kept its 4-hour slot: the new end is the new start plus the
+    length the search showed, so no judge is asked about it."""
+    asked, end_gates = value_source_questions("2026-10-01T12:00:00-07:00")
+    assert asked == {"start": "2026-10-01T08:00:00-07:00"}  # the start still is
+    assert end_gates == []
+
+
+@pytest.mark.parametrize(
+    "end, update",
+    [
+        ("2026-10-01T13:00:00-07:00", {}),  # a 5-hour slot: a new length
+        ("2026-10-01T12:00:00-07:00", {"event_id": "other-job"}),  # not the event read
+    ],
+)
+def test_an_end_that_does_not_keep_the_read_events_length_goes_to_the_judges(
+    end, update
+):
+    asked, end_gates = value_source_questions(end, **update)
+    assert asked["end"] == end
+    assert end_gates == [("fail", ["reader"])]
+
+
+def test_keeping_a_length_sources_only_that_date_time():
+    """Other unsourced values in the same action are still asked about."""
+    asked, _ = value_source_questions("2026-10-01T12:00:00-07:00", location="Dock 9")
+    assert asked == {"start": "2026-10-01T08:00:00-07:00", "location": "Dock 9"}
 
 
 def test_claim_context_includes_split_reply_but_not_later_approval_or_completion():
@@ -1136,6 +1194,21 @@ def test_single_run_grading_shares_the_answers_file_report_and_annotate_use(
     assert not (tmp_path / "grades/run-1/answers.json").exists()
 
 
+def test_a_host_grades_with_its_own_answers_store(tmp_path, monkeypatch):
+    """A host whose saved answers need reading another way passes its store."""
+    monkeypatch.chdir(tmp_path)
+    folder = run_record.save(record(), tmp_path / "run-1")
+    opened = []
+
+    class HostStore(AnswerStore):
+        def __init__(self, path=None):
+            opened.append(path)
+            super().__init__(path)
+
+    main([str(folder), "--offline"], store=HostStore)
+    assert opened == [Path("grades/answers.json")]
+
+
 @pytest.mark.parametrize(
     "operation, needs_yes",
     [
@@ -2060,3 +2133,39 @@ def test_an_end_state_selector_value_may_contain_dots():
 
     state = {"sent": [{"recipient": "ben@example.com", "subject": "Monday"}]}
     assert _resolve(state, "sent[recipient=ben@example.com].subject") == "Monday"
+
+
+class Fixed:
+    """A judge that answers every question with the same probability."""
+
+    def __init__(self, p, name):
+        self.p, self.name, self.model = p, name, name
+
+    def __call__(self, q):
+        return self.p
+
+
+def test_a_checker_answers_a_recheck_the_reader_is_unsure_of():
+    """A re-check that leaves the judge out goes to the CHECKER, if set,
+    before a person; other questions never reach it."""
+    recheck = Question(
+        "user_rule:0", "yes_no", "Does it meet `condition`?", {}, rungs=("reader",)
+    )
+    plain = Question("q", "yes_no", "Is it so?", {})
+    unsure, sure = Fixed(0.5, "reader"), Fixed(0.9, "checker")
+    without = Ladder(AnswerStore(), reader=unsure, judge=Fixed(0.1, "judge"))
+    assert without.decide_one(recheck).decided_by == "needs_human_annotation"
+    ladder = Ladder(
+        AnswerStore(), reader=unsure, judge=Fixed(0.1, "judge"), checker=sure
+    )
+    decided = ladder.decide_one(recheck)
+    assert (decided.value, decided.decided_by, decided.checker) == (
+        True,
+        "checker",
+        0.9,
+    )
+    assert ladder.decide_one(plain).decided_by == "judge"
+    person = Question("causality", "yes_no", "Does it hold?", {}, rungs=())
+    assert ladder.decide_one(person).decided_by == "needs_human_annotation"
+    assert ladder.models()["checker"] == "checker"
+    assert "checker" not in without.models()
