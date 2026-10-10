@@ -2150,5 +2150,7 @@ def test_a_checker_answers_a_recheck_the_reader_is_unsure_of():
         0.9,
     )
     assert ladder.decide_one(plain).decided_by == "judge"
+    person = Question("causality", "yes_no", "Does it hold?", {}, rungs=())
+    assert ladder.decide_one(person).decided_by == "needs_human_annotation"
     assert ladder.models()["checker"] == "checker"
     assert "checker" not in without.models()

@@ -338,8 +338,10 @@ class Ladder:
         if human is not None:
             return Decision(q.id, human, HUMAN)
         answers = {}
-        # A re-check that leaves the judge out goes to the checker, if set.
-        checker = ("checker",) if self.checker and "judge" not in q.rungs else ()
+        # A reader-only re-check (the judge made the original call) goes to the
+        # checker, if set. A question with no rungs is for a person alone.
+        recheck = "reader" in q.rungs and "judge" not in q.rungs
+        checker = ("checker",) if self.checker and recheck else ()
         for rung in ("reader", "judge", *checker):
             if rung not in (*q.rungs, *checker):
                 continue
