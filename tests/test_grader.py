@@ -1194,6 +1194,21 @@ def test_single_run_grading_shares_the_answers_file_report_and_annotate_use(
     assert not (tmp_path / "grades/run-1/answers.json").exists()
 
 
+def test_a_host_grades_with_its_own_answers_store(tmp_path, monkeypatch):
+    """A host whose saved answers need reading another way passes its store."""
+    monkeypatch.chdir(tmp_path)
+    folder = run_record.save(record(), tmp_path / "run-1")
+    opened = []
+
+    class HostStore(AnswerStore):
+        def __init__(self, path=None):
+            opened.append(path)
+            super().__init__(path)
+
+    main([str(folder), "--offline"], store=HostStore)
+    assert opened == [Path("grades/answers.json")]
+
+
 @pytest.mark.parametrize(
     "operation, needs_yes",
     [

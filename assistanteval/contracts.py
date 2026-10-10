@@ -83,3 +83,13 @@ class Assistant(Protocol):
     # the messages it returns, is True when the answer was still coming at that
     # read (a tool loop still running, a "working" indicator). The runner holds
     # the user meanwhile, so it must clear whenever the adapter stops.
+
+
+class Stop(Exception):
+    """A stop signal, the run's deadline, or a host's reason to end the run now
+    (such as a lost account lease): the runner saves the record, with `code`
+    as its error, and releases the services."""
+
+    def __init__(self, code: str = "stopped"):
+        super().__init__(code)
+        self.code = code

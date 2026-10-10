@@ -104,7 +104,8 @@ def _print(rows: list[dict], overall: list[dict], skipped: list[dict]) -> None:
         print(f"skipped {s['run']}: {s['error']}")
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, store=AnswerStore) -> int:
+    """`store`: the answers file's class (see `grader.__main__.main`)."""
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("runs", type=Path, help="folder that holds one folder per run")
     parser.add_argument("--out", type=Path, default=Path("grades"))
@@ -113,7 +114,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    store = AnswerStore(args.out / "answers.json")
+    store = store(args.out / "answers.json")
     ladder = ladder_from_env(store, args.offline)
     counts: dict[tuple[str, str], Counter] = defaultdict(Counter)
     annotations: dict[tuple[str, str], Counter] = defaultdict(Counter)
