@@ -112,6 +112,21 @@ every measure moves the expected way. No assistant offered more help in these
 runs, so no decline was sent. An earlier arm with the reader-only routing
 measured 3/33 "i don't know" and 6/32 disputed runs.
 
+## Hermes in Harbor
+
+Three live Hermes Agent trials (Claude Sonnet 5.5) with simulated user
+version 2 ran cleanly through Harbor's ACP bridge, the version recorded in each
+record: `kingsway-reschedule-crew` passed; `textbook-two-buyers` failed on its
+own merits (it did not show the replies first); `flight-before-ben` waited for
+a person, because Hermes ended "if you'd rather have the debrief on Monday,
+tell me and I'll ask Ben", the reader could not tell whether it had finished,
+and the user said it did not know. With the CHECKER that run grades as a pass,
+and an unsure reading that is an offer of more help now gets a decline.
+
+Rerun twice with the final code, `flight-before-ben` passed both times with no
+run waiting for a person and no CHECKER: in one, Hermes again offered to ask
+Ben, the user answered "no, leave it for now", and the run passed.
+
 ## Writer and user styles (`styles/RESULTS.md`)
 
 - The writer's rewording was rejected as "changed" 48% of the time, so the
