@@ -94,6 +94,17 @@ each: 32 runs per arm, graded live with the official judges.
 | User replies sent reworded (not the fixed text) | 23/42 (55%) | **24/32 (75%)** |
 | `flight-before-ben` | 2 pass, 2 waiting for a person | **4 pass** |
 
+Regraded with the opt-in CHECKER (Gemini 3.1 Pro), from the same saved judge
+answers:
+
+| Live records | Without CHECKER | With CHECKER |
+|---|---|---|
+| Published code (32) | 9 waiting for a person | **1** (13 questions answered by the checker) |
+| This branch (32) | 6 waiting for a person | **0** (7 answered by the checker) |
+
+The settled runs split into passes and failures (published code: 8 → 13 pass,
+15 → 18 fail), as an independent check should.
+
 A small sample, and outcomes also move with the assistant's own variation, but
 every measure moves the expected way. No assistant offered more help in these
 runs, so no decline was sent. An earlier arm with the reader-only routing
