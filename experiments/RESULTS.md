@@ -10,8 +10,8 @@ The evaluation itself is stable: regrading the same records repeats 21/22
 outcomes and 131/132 gates. The weak spot is the simulated user:
 
 - **"i don't know".** The user answers only from its facts and approval rules;
-  to anything else it says "i don't know". In the published runs that is 10.8%
-  of user replies. It is unrealistic, and it can stall an assistant.
+  to anything else it says "i don't know". Replaying the published runs, that
+  is 10.8% of user replies. It is unrealistic, and it can stall an assistant.
 - **Disputed readings.** The grader re-reads each simulated-user decision with
   its own question. A disagreement, or judges that are unsure, sends the run to
   a person. That is 5.6% of decisions.
@@ -47,7 +47,7 @@ outcomes and 131/132 gates. The weak spot is the simulated user:
 |---|---|---|---|---|---|
 | Published code | 113 (4.5%) | 0 | 142 (5.6%) | 84 | 58 |
 | This branch | **75 (3.0%)** | 30 | 142 (5.6%) | 82 | 60 |
-| This branch + CHECKER (Gemini 3.1 Pro) | 76 (3.0%) | 29 | **90 (3.6%)** | 86 | 4 |
+| This branch + CHECKER (Gemini 3.1 Pro) | 75 (3.0%) | 30 | **90 (3.6%)** | 86 | 4 |
 
 1. **Decline offers of more help**, also when the reader cannot tell whether
    the turn finished (a live Hermes run ended "if you'd rather have the debrief
@@ -55,7 +55,7 @@ outcomes and 131/132 gates. The weak spot is the simulated user:
    further help with "no thanks, that's all for now" instead of "i don't
    know". The grader checks a decline as it checks "i don't know" (wrong only
    if the turn asked for a fact the user holds or proposed an action with a
-   rule). 29 decisions; the independent audit confirmed 23 of 27 by both
+   rule). 30 decisions; the independent audit confirmed 23 of 27 by both
    models, and neither model rejected any.
 2. **Route a missed proposal to its rule, carefully.** Before "i don't know",
    the user asks the grader's own question ("does the turn ask whether to do
