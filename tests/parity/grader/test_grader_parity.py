@@ -344,7 +344,7 @@ def test_the_grader_gives_the_golden_verdict(case, answers):
     expected = json.loads((HERE / "verdicts" / f"{case}.json").read_text())
     ladder = Ladder(answers)
     now = grade(record, ladder)
-    assert now["grader_version"] == "0.8.8"
+    assert now["grader_version"] == "0.8.9"
     assert comparable(now, case, False, record) == comparable(
         expected, case, True, record
     )

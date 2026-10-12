@@ -1,5 +1,6 @@
 import copy
 import json
+from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
 
@@ -2143,6 +2144,48 @@ class Fixed:
 
     def __call__(self, q):
         return self.p
+
+
+@pytest.mark.parametrize(
+    "reader, judge, checker, decided",
+    [
+        # The reader is sure the user misread; the checker is sure it did not.
+        (0.1, None, 0.9, (True, "checker")),
+        # The judge settles it against the user; the checker breaks the tie.
+        (0.5, 0.05, 0.95, (True, "checker")),
+        # The checker agrees with the reader, or is unsure: the dispute stands.
+        (0.1, None, 0.1, (False, "reader")),
+        (0.1, None, 0.5, (False, "reader")),
+        # No checker: as before.
+        (0.1, None, None, (False, "reader")),
+    ],
+)
+def test_a_checker_breaks_a_tie_against_the_simulated_users_reading(
+    reader, judge, checker, decided
+):
+    """A sure reader or judge answer against the simulated user's reading goes
+    to the CHECKER: if it is sure the user read the turn right, the user's
+    reading stands."""
+    q = Question("user_read:0", "yes_no", "Does it ask?", {}, user_answer=True)
+    ladder = Ladder(
+        AnswerStore(),
+        reader=Fixed(reader, "reader"),
+        judge=Fixed(judge, "judge") if judge is not None else None,
+        checker=Fixed(checker, "checker") if checker is not None else None,
+    )
+    d = ladder.decide_one(q)
+    assert (d.value, d.decided_by) == decided
+    # The checker is never asked when the reading agrees with the user's.
+    agreeing = Ladder(
+        AnswerStore(), reader=Fixed(0.9, "reader"), checker=Fixed(0.1, "checker")
+    )
+    assert agreeing.decide_one(q).checker is None
+
+
+def test_a_tie_break_keeps_question_keys():
+    """The simulated user's answer is not part of a question's key, so saved answers still match."""
+    plain = Question("user_read:0", "yes_no", "Does it ask?", {"t": 1})
+    assert replace(plain, user_answer=False).key() == plain.key()
 
 
 def test_a_checker_answers_a_recheck_the_reader_is_unsure_of():

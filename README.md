@@ -43,7 +43,7 @@ To run tasks in [Harbor](https://github.com/harbor-framework/harbor) against an 
 | `READER` | Reads each assistant turn for the simulated user, and answers the grader's questions first | No; without it the judge reads too |
 | `WRITER` | Rewords the simulated user's fixed replies in the persona's voice | No; without it the fixed replies are sent |
 | `BASELINE` | The model under test in the built-in tool loop | For `--assistant model_baseline` |
-| `CHECKER` | A model other than the judge that settles the grader's re-checks of the simulated user's decisions when the reader is unsure, and whether a result holds despite the user's misreadings | No; without it those go to a person |
+| `CHECKER` | A model other than the judge that settles the grader's re-checks of the simulated user's decisions when the reader is unsure, breaks the tie when the reader or judge is sure the user misread a turn, and decides whether a result holds despite the user's misreadings | No; without it those go to a person |
 
 Each role reads `ASSISTANTEVAL_<ROLE>_MODEL`, `_BASE_URL`, `_API_KEY`, and optionally `_API` (`openai`, or `jev` for TypeSafe's Jev as the reader) and `_EXTRA_BODY`. Records keep each role's model and base URL, never its key. Scores from different judge models are not directly comparable: report the judges with the scores.
 

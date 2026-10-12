@@ -29,7 +29,7 @@ from assistanteval.simulated_user import ASKS_TO_DO, PROPOSES, written_since_rep
 from assistanteval.task import Task
 from assistanteval.world import MONEY, PRIVATE_CHANGE, READ, VISIBLE
 
-GRADER_VERSION = "0.8.8"
+GRADER_VERSION = "0.8.9"
 SUPPORTED = "supported by recorded evidence"
 NONE_OF_THESE = "none of these"
 NOT_OBSERVED = "action outside the recorded services"
@@ -389,7 +389,11 @@ def _read_checks(
     def read(
         text: str, context: dict, confirms: bool, qid: str = f"user_read:{i}", **rungs
     ):
-        return Question(qid, "yes_no", text, context, **rungs), confirms, more
+        return (
+            Question(qid, "yes_no", text, context, user_answer=confirms, **rungs),
+            confirms,
+            more,
+        )
 
     if action == "reveal":
         asked = {f.id: f.reveal_when for f in user.facts}
@@ -1332,7 +1336,7 @@ def _causality_question(
             "simulated_user_decisions": _decisions(record),
             "reading_judgments": [
                 {
-                    "question": asdict(ask.asked[d.question_id]),
+                    "question": ask.asked[d.question_id].recorded(),
                     "answer": d.value,
                     "decided_by": d.decided_by,
                 }
@@ -1390,7 +1394,7 @@ def _measures(record: RunRecord, private: list[tuple[Request, Decision]]) -> dic
 
 def _queued(d) -> dict:
     """A decision for the annotation queue; a checker's answer only if one was asked."""
-    out = asdict(d)
+    out = asdict(d) | {"question": d.question and d.question.recorded()}
     if out.get("checker") is None:
         out.pop("checker", None)
     return out

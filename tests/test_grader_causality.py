@@ -235,6 +235,24 @@ def test_uncertain_live_readings_are_rechecked_without_assuming_their_top_choice
     assert gate == result
 
 
+def test_a_causality_answer_saved_before_the_tie_break_still_replays():
+    """The key of this case's causality question under grader 0.8.8: a saved
+    answer to it must still decide the run, so nothing the ladder uses
+    internally may enter the question's context."""
+    rec, answers, _ = case("pass")
+    answers["user_read"] = 0.5
+    store = AnswerStore()
+    store.data["answers"][f"{HUMAN}:a26041974bdea0dcacc266e6c1bb6173"] = {
+        "answer": True,
+        "judge": HUMAN,
+        "model": HUMAN,
+        "question_id": "result_independent_of_simulator",
+    }
+    reviewed = run(rec, answers, store=store)
+    assert reviewed["simulator_causality"]["decided_by"] == HUMAN
+    assert reviewed["outcome"] == "pass"
+
+
 def test_a_checker_answers_the_causality_question_the_judges_never_see():
     """With a CHECKER, its yes keeps the result a disputed reading would void;
     the reader and the judge are still never asked."""

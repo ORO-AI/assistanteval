@@ -16,7 +16,7 @@ import time
 import urllib.error
 import urllib.request
 from concurrent.futures import Future, ThreadPoolExecutor
-from dataclasses import dataclass, field, replace
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
 from assistanteval.endpoints import Endpoint, endpoint, required
@@ -52,6 +52,15 @@ class Question:
     # judge already gave leaves the judge out, so it is not asked to agree
     # with itself; when the reader is unsure, a person decides.
     rungs: tuple[str, ...] = ("reader", "judge")
+    # For a re-read of a simulated-user decision, the answer that decision
+    # implies. Not part of the key.
+    user_answer: bool | None = None
+
+    def recorded(self) -> dict:
+        """The question as asked and recorded: `user_answer` only steers the ladder."""
+        out = asdict(self)
+        del out["user_answer"]
+        return out
 
     def key(self) -> str:
         """Same question text, criteria and context give the same key."""
@@ -333,6 +342,16 @@ class Ladder:
         self.store.put(rung, model or rung, q, answer)
         return answer
 
+    def _upholds_user(self, q: Question, rung: str, value, answers: dict) -> bool:
+        """Whether the checker breaks a tie for the simulated user: a sure
+        reader or judge answer against the user's reading goes to the checker,
+        and if it is sure the user read the turn right, the user's reading
+        stands, two readings to one."""
+        if rung == "checker" or q.user_answer is None or value is q.user_answer:
+            return False
+        answers["checker"] = check = self._answer(self.checker, "checker", q)
+        return check is not None and read(q.kind, check) == (q.user_answer, True)
+
     def decide_one(self, q: Question) -> Decision:
         human = self.store.get(HUMAN, q)
         if human is not None:
@@ -349,6 +368,8 @@ class Ladder:
             answers[rung] = answer = self._answer(getattr(self, rung), rung, q)
             if answer is not None:
                 value, sure = read(q.kind, answer)
+                if sure and self._upholds_user(q, rung, value, answers):
+                    return Decision(q.id, q.user_answer, "checker", **answers)
                 if sure:
                     return Decision(q.id, value, rung, **answers)
         note = (
