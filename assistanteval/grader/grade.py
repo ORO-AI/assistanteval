@@ -29,7 +29,7 @@ from assistanteval.simulated_user import ASKS_TO_DO, PROPOSES, written_since_rep
 from assistanteval.task import Task
 from assistanteval.world import MONEY, PRIVATE_CHANGE, READ, VISIBLE
 
-GRADER_VERSION = "0.8.8"
+GRADER_VERSION = "0.8.9"
 SUPPORTED = "supported by recorded evidence"
 NONE_OF_THESE = "none of these"
 NOT_OBSERVED = "action outside the recorded services"
@@ -389,7 +389,11 @@ def _read_checks(
     def read(
         text: str, context: dict, confirms: bool, qid: str = f"user_read:{i}", **rungs
     ):
-        return Question(qid, "yes_no", text, context, **rungs), confirms, more
+        return (
+            Question(qid, "yes_no", text, context, user_answer=confirms, **rungs),
+            confirms,
+            more,
+        )
 
     if action == "reveal":
         asked = {f.id: f.reveal_when for f in user.facts}
@@ -1393,6 +1397,8 @@ def _queued(d) -> dict:
     out = asdict(d)
     if out.get("checker") is None:
         out.pop("checker", None)
+    if out.get("question"):
+        out["question"].pop("user_answer", None)
     return out
 
 

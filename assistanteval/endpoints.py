@@ -27,7 +27,9 @@ The roles:
   simulated user's approval-rule decisions, which the judge made, with the
   reader; when the reader is unsure, the checker answers before a person does.
   It also answers whether a result holds despite the simulated user's
-  misreadings, which otherwise waits for a person.
+  misreadings, which otherwise waits for a person, and breaks the tie when the
+  reader or judge is sure the simulated user misread a turn: if the checker is
+  sure the user read it right, the user's reading stands.
 
 Records keep each role's model, API and base URL, never its key.
 """
