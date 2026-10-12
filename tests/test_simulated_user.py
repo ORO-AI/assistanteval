@@ -33,6 +33,10 @@ class ScriptedJev:
             return (
                 0.95 if "shall i send" in q.context["assistant_turn"].lower() else 0.05
             )
+        if q.id.startswith("user_hears_choice:"):
+            turn = q.context["assistant_turn"].lower()
+            pick = "which" if " or both" in turn else "whether"
+            return {option: float(option == pick) for option in q.criteria}
         if q.id == "user_reads_turn":
             turn = q.context["assistant_turn"].lower()
             if "send" in turn:
@@ -42,10 +46,14 @@ class ScriptedJev:
             else:
                 pick = "no_progress"
             return {option: float(option == pick) for option in q.criteria}
-        if q.id == "user_checks_proposal":
-            return (
-                0.95 if "no rain cover" in q.context["assistant_turn"].lower() else 0.05
-            )
+        if q.id in ("user_checks_proposal", "user_checks_every"):
+            seen = " ".join(
+                [q.context["assistant_turn"], *q.context.get("earlier_messages", [])]
+            ).lower()
+            # Every draft must leave the rain cover out; Ben's may not.
+            if q.id == "user_checks_every" and "ben's has" in seen:
+                return 0.05
+            return 0.95 if "no rain cover" in seen else 0.05
         if q.id == "user_checks_rewording":
             return 0.05 if "friday" in q.context["rewording"].lower() else 0.95
         raise AssertionError(q.id)
@@ -87,6 +95,52 @@ def test_approves_only_when_the_rule_is_met():
     # A refusal gives the user's reason from the task's approval rule.
     reason = TASK["simulated_user"]["approvals"][0]["if_not"]
     assert (reply.decision["action"], reply.text) == ("refuse", reason)
+
+
+def asked_which_after_a_yes(drafts: str):
+    """The user says yes to sending; the assistant asks which buyer."""
+    user = SimulatedUser(TASK, ScriptedJev())
+    turns = conversation(f"{drafts} Shall I send them?")
+    first = user.reply(turns, at_ms=10)
+    turns += [
+        Turn("user", first.text, 11),
+        Turn("assistant", "Shall I send it to Anita, Ben, or both?", 12),
+    ]
+    return first, user.reply(turns, at_ms=13)
+
+
+def test_asked_which_after_a_yes_the_user_says_every_one():
+    """A plain yes again would leave the assistant asking; the rule holds for both drafts."""
+    first, again = asked_which_after_a_yes(
+        "Drafts to Anita and Ben: $200, no rain cover."
+    )
+    assert first.text == "yes, go ahead and send a reply to a buyer"
+    assert (again.decision["action"], again.text) == (
+        "approve",
+        "yes, go ahead and send a reply to a buyer, every one you showed me",
+    )
+    assert approval("marketplace.reply", True) == again.text
+
+
+def test_the_yes_covers_every_one_only_if_all_of_them_meet_the_rule():
+    first, again = asked_which_after_a_yes(
+        "Drafts: Anita's says no rain cover, Ben's has it included."
+    )
+    assert first.decision["action"] == again.decision["action"] == "approve"
+    assert again.text == "yes, go ahead and send a reply to a buyer"
+
+
+def test_a_first_choice_gets_the_plain_yes():
+    """Only asked again after its yes does the user answer which; the first
+    time, "or both" is just how the assistant asks."""
+    user = SimulatedUser(TASK, ScriptedJev())
+    reply = user.reply(
+        conversation(
+            "Drafts to Anita and Ben, no rain cover. Shall I send it to Anita, Ben, or both?"
+        ),
+        at_ms=10,
+    )
+    assert reply.text == "yes, go ahead and send a reply to a buyer"
 
 
 def test_a_separate_rules_judge_decides_approvals():
