@@ -29,7 +29,7 @@ from assistanteval.simulated_user import ASKS_TO_DO, PROPOSES, written_since_rep
 from assistanteval.task import Task
 from assistanteval.world import MONEY, PRIVATE_CHANGE, READ, VISIBLE
 
-GRADER_VERSION = "0.8.7"
+GRADER_VERSION = "0.8.8"
 SUPPORTED = "supported by recorded evidence"
 NONE_OF_THESE = "none of these"
 NOT_OBSERVED = "action outside the recorded services"

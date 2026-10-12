@@ -344,7 +344,7 @@ class Ladder:
         recheck = "reader" in q.rungs and "judge" not in q.rungs
         rungs = {*q.rungs, *(("checker",) if recheck else ())}
         for rung in ("reader", "judge", "checker"):
-            if rung not in rungs or (rung == "checker" and not self.checker):
+            if rung not in rungs:
                 continue
             answers[rung] = answer = self._answer(getattr(self, rung), rung, q)
             if answer is not None:
