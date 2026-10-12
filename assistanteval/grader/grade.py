@@ -1336,7 +1336,7 @@ def _causality_question(
             "simulated_user_decisions": _decisions(record),
             "reading_judgments": [
                 {
-                    "question": asdict(ask.asked[d.question_id]),
+                    "question": ask.asked[d.question_id].recorded(),
                     "answer": d.value,
                     "decided_by": d.decided_by,
                 }
@@ -1394,11 +1394,9 @@ def _measures(record: RunRecord, private: list[tuple[Request, Decision]]) -> dic
 
 def _queued(d) -> dict:
     """A decision for the annotation queue; a checker's answer only if one was asked."""
-    out = asdict(d)
+    out = asdict(d) | {"question": d.question and d.question.recorded()}
     if out.get("checker") is None:
         out.pop("checker", None)
-    if out.get("question"):
-        out["question"].pop("user_answer", None)
     return out
 
 

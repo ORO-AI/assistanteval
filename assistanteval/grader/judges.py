@@ -16,7 +16,7 @@ import time
 import urllib.error
 import urllib.request
 from concurrent.futures import Future, ThreadPoolExecutor
-from dataclasses import dataclass, field, replace
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
 from assistanteval.endpoints import Endpoint, endpoint, required
@@ -55,6 +55,12 @@ class Question:
     # For a re-read of a simulated-user decision, the answer that decision
     # implies. Not part of the key.
     user_answer: bool | None = None
+
+    def recorded(self) -> dict:
+        """The question as asked and recorded: `user_answer` only steers the ladder."""
+        out = asdict(self)
+        del out["user_answer"]
+        return out
 
     def key(self) -> str:
         """Same question text, criteria and context give the same key."""
