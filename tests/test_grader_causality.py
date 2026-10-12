@@ -245,11 +245,14 @@ def test_a_checker_answers_the_causality_question_the_judges_never_see():
     checker = ScriptedJudge(
         "checker", {**answers, "result_independent_of_simulator": 0.95}
     )
-    reviewed = grade(
-        rec, Ladder(AnswerStore(), reader=reader, judge=judge, checker=checker)
-    )
+    store = AnswerStore()
+    reviewed = grade(rec, Ladder(store, reader=reader, judge=judge, checker=checker))
     assert reviewed["simulator_causality"]["decided_by"] == "checker"
     assert reviewed["outcome"] == "pass"
     assert all(
         q.id != "result_independent_of_simulator" for q in reader.seen + judge.seen
     )
+    # Offline, the checker's saved answers decide as the reader's and judge's do.
+    offline = grade(rec, Ladder(store))
+    assert offline["simulator_causality"] == reviewed["simulator_causality"]
+    assert offline["outcome"] == "pass"
