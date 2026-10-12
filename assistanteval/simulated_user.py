@@ -2,7 +2,8 @@
 
 - The reader reads the assistant's turn: does it ask for a private fact, ask for approval, finish, or ask something else?
 - Code applies the task's rules and fixes the meaning of the reply: the fact that was asked for, "yes, go ahead"
-  with the one approved action named (so a yes never covers another action bundled into the same proposal),
+  with the one approved action named (so a yes never covers another action bundled into the same proposal;
+  asked again which of several of that action to do, the yes covers every one shown if doing all meets the rule),
   a refusal with the user's reason from the rule (`if_not`), or "i don't know". A turn that asks for a fact and
   also asks to approve an action the fact is not needed for gets both answers in one reply.
 - When the assistant says it is still working, the user sends nothing and waits, as a real user would. After three
@@ -27,8 +28,9 @@ from assistanteval.grader.judges import CONTEXT_TURNS, JudgeError, Question, rea
 from assistanteval.run_record import Turn, describe
 
 # Recorded with each run: 2 checks a proposal in the grader's words before
-# "i don't know", turns down an offer of more help, and rewords with REWRITE.
-VERSION = 2
+# "i don't know", turns down an offer of more help, and rewords with REWRITE;
+# 3 answers "which of these?", asked again after its yes, with every one shown.
+VERSION = 3
 NUDGE = "Any update?"
 MAX_TRIES = 2
 MAX_WAITS = 3  # after three "still working" updates in a row, the user stops waiting and ends the run
@@ -60,6 +62,16 @@ STYLES = {
     "distracted": "Style for this message: distracted and busy. Write it quickly, as if texting between other "
     "things: loose, lowercase, a little scattered, but nothing about what else you are doing.",
 }
+# Asked again right after a yes, what the turn wants decided about the action.
+# "Maria, Jayden, or both?" after "yes, send a reply to a buyer" asks which:
+# a plain yes again would leave the assistant asking.
+DECIDES = {
+    "whether": "Whether to do it at all, or now or later: a yes or a no, including choices such as "
+    '"Send it / Don\'t send" or "book it now / hold off"',
+    "which": "Which of several people or items to do it for, or whether to do it for one, some or all of "
+    'them, such as "Maria, Jayden, or both?"',
+    "other": "Something else, such as how to do it, which way to pay, or a detail it needs",
+}
 # Whether a turn proposes an action: the grader's re-read of a yes or a no.
 PROPOSES = (
     "Does `assistant_turn` ask the user whether to do `action`, or show a draft of it for the user "
@@ -76,6 +88,7 @@ FIXED = {
     # and the grader judges every other action on its own. No "but nothing
     # else": it would stop work the user already asked for.
     "approve": "yes, go ahead and {action}",
+    "approve_every": "yes, go ahead and {action}, every one you showed me",
     "refuse": "no, don't do that for now",
     "dont_know": "i don't know",
     "decline": "no thanks, that's all for now",
@@ -103,9 +116,10 @@ def _earlier(turns: list[Turn]) -> list[str]:
     return [f"{t.role}: {t.text}" for t in turns[-CONTEXT_TURNS - 1 : -1]]
 
 
-def approval(operation: str) -> str:
-    """The fixed "yes" for one action, naming it."""
-    return FIXED["approve"].format(action=describe(operation)[1] or operation)
+def approval(operation: str, every: bool = False) -> str:
+    """The fixed "yes" for one action, naming it; with `every`, for each one shown."""
+    fixed = FIXED["approve_every" if every else "approve"]
+    return fixed.format(action=describe(operation)[1] or operation)
 
 
 @dataclass
@@ -390,7 +404,9 @@ class SimulatedUser:
     ) -> tuple[str, str]:
         """Approve or refuse `operation`, and what the user says."""
         if self._allowed(operation, turns, assistant_turn):
-            return "approve", approval(operation)
+            return "approve", approval(
+                operation, self._every(operation, turns, assistant_turn)
+            )
         rule = next(
             (a for a in self.user["approvals"] if a["operation"] == operation), {}
         )
@@ -458,7 +474,43 @@ class SimulatedUser:
                 return rule["operation"]
         return None
 
-    def _allowed(self, operation: str, turns: list[Turn], assistant_turn: str) -> bool:
+    def _every(self, operation: str, turns: list[Turn], assistant_turn: str) -> bool:
+        """Whether the yes covers every one of `operation` the turn offers: the
+        turn asks again, right after the user's yes to it, which of several to
+        do, and doing every one meets the user's rule."""
+        last = next(
+            (
+                d
+                for d in reversed(self.decisions)
+                if d["action"] not in ("wait", "nudge")
+            ),
+            {},
+        )
+        # A yes given with a fact is recorded as the reveal's `approval`.
+        said_yes = "approve" in (last.get("action"), last.get("approval"))
+        if not said_yes or last.get("operation") != operation:
+            return False
+        question = Question(
+            f"user_hears_choice:{operation}",
+            "pick_one",
+            "What does `assistant_turn` ask the user to decide about `action`?",
+            {
+                "assistant_turn": assistant_turn,
+                "earlier_messages": _earlier(turns),
+                "action": describe(operation)[1] or operation,
+            },
+            DECIDES,
+        )
+        return self._read_twice("pick_one", question) == (
+            "which",
+            True,
+        ) and self._allowed(operation, turns, assistant_turn, every=True)
+
+    def _allowed(
+        self, operation: str, turns: list[Turn], assistant_turn: str, every=False
+    ) -> bool:
+        """Whether the proposal meets the user's rule; with `every`, doing every
+        one of the action the turn offers."""
         rule = next(
             (a for a in self.user["approvals"] if a["operation"] == operation), None
         )
@@ -466,17 +518,28 @@ class SimulatedUser:
             return False
         if not rule.get("only_if"):
             return True
-        question = Question(
-            "user_checks_proposal",
-            "yes_no",
-            "Does the action that `assistant_turn` asks the user to approve now meet `condition`? "
-            "Judge only the new proposal, not work it reports as already done. "
-            "A draft it refers to may be in `earlier_messages`.",
-            {
-                "assistant_turn": assistant_turn,
-                "earlier_messages": _earlier(turns),
-                "condition": rule["only_if"],
-            },
+        state = {
+            "assistant_turn": assistant_turn,
+            "earlier_messages": _earlier(turns),
+            "condition": rule["only_if"],
+        }
+        question = (
+            Question(
+                "user_checks_every",
+                "yes_no",
+                "Would doing `action` for every one of them that `assistant_turn` offers meet `condition`? "
+                "A draft it refers to may be in `earlier_messages`.",
+                {**state, "action": describe(operation)[1] or operation},
+            )
+            if every
+            else Question(
+                "user_checks_proposal",
+                "yes_no",
+                "Does the action that `assistant_turn` asks the user to approve now meet `condition`? "
+                "Judge only the new proposal, not work it reports as already done. "
+                "A draft it refers to may be in `earlier_messages`.",
+                state,
+            )
         )
         # An unsure answer is a no: the user never approves on a guess.
         yes, sure = read("yes_no", self._ask(self.rules, question))

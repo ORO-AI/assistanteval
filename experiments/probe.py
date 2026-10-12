@@ -177,6 +177,7 @@ def replay(item: dict, reader, rules, ask, tasks_dir) -> list[dict]:
                 "action": d["action"],
                 "fact_ids": d["fact_ids"],
                 "operation": d["operation"],
+                "text": d["text"],
                 "recorded_reply": sent,
                 "recorded_dont_know": bool(sent and DONT_KNOW.search(sent)),
                 "assistant_turn": seen[-1].text[-600:] if seen else "",

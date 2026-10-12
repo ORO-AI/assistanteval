@@ -129,7 +129,7 @@ What ran, for provenance. The grader reads only `world`.
 
 ```json
 {
-  "version": 2,
+  "version": 3,
   "style": null,
   "model": "<writer model>",
   "reader_model": "<reader model>",
