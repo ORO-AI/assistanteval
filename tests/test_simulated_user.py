@@ -122,6 +122,27 @@ def test_asked_which_after_a_yes_the_user_says_every_one():
     assert approval("marketplace.reply", True) == again.text
 
 
+def test_a_yes_given_with_a_fact_counts_as_the_yes_before_the_choice():
+    task = copy.deepcopy(TASK)
+    task["simulated_user"]["facts"][0]["needed_before"] = []
+    user = SimulatedUser(task, ScriptedJev())
+    turns = conversation(
+        "Drafts to Anita and Ben: $200, no rain cover. Is the rain cover included? "
+        "Shall I send them?"
+    )
+    first = user.reply(turns, at_ms=10)
+    assert (first.decision["action"], first.decision["approval"]) == (
+        "reveal",
+        "approve",
+    )
+    turns += [
+        Turn("user", first.text, 11),
+        Turn("assistant", "Shall I send it to Anita, Ben, or both?", 12),
+    ]
+    again = user.reply(turns, at_ms=13)
+    assert again.text == approval("marketplace.reply", True)
+
+
 def test_the_yes_covers_every_one_only_if_all_of_them_meet_the_rule():
     first, again = asked_which_after_a_yes(
         "Drafts: Anita's says no rain cover, Ben's has it included."

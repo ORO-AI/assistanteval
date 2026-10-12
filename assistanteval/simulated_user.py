@@ -486,7 +486,9 @@ class SimulatedUser:
             ),
             {},
         )
-        if (last.get("action"), last.get("operation")) != ("approve", operation):
+        # A yes given with a fact is recorded as the reveal's `approval`.
+        said_yes = "approve" in (last.get("action"), last.get("approval"))
+        if not said_yes or last.get("operation") != operation:
             return False
         question = Question(
             f"user_hears_choice:{operation}",
