@@ -1,7 +1,9 @@
 """Result-specific review retains the simulator error and the task's actual rules."""
 
 import copy
+import importlib
 import json
+from dataclasses import replace
 
 import pytest
 
@@ -9,7 +11,10 @@ from assistanteval.grader import AnswerStore, Ladder, Question, grade
 from assistanteval.grader import annotate
 from assistanteval.grader.judges import HUMAN
 from assistanteval.run_record import Turn
+from assistanteval.task import Task
 from tests.records import GOOD, OPENING, ScriptedJudge, record, results, run, task
+
+grade_module = importlib.import_module("assistanteval.grader.grade")
 
 
 def case(result):
@@ -205,6 +210,87 @@ def test_annotation_stages_changed_readings_before_causality_but_preserves_defer
         verdict_path.write_text(json.dumps(refreshed))
         annotate.main([str(verdict_path), "--answers", str(answer_path)])
         assert run(rec, answers, store=AnswerStore(answer_path))["outcome"] == "pass"
+
+
+@pytest.mark.parametrize(
+    "user, reader_then, reader_now, stale",
+    [
+        # A tie-break: the reader sure against the user, the checker upholds it.
+        (True, 0.05, 0.05, False),
+        # A re-check the checker decided against the user: unchanged answers
+        # replay the same, and a reader that has since become sure is a change.
+        (False, 0.5, 0.5, False),
+        (False, 0.5, 0.05, True),
+    ],
+)
+def test_a_checker_decided_reading_replays_with_the_users_answer(
+    user, reader_then, reader_now, stale
+):
+    """Annotation must not ask for a regrade forever over a reading the checker
+    decided, and must still notice one whose answers changed."""
+    q = Question(
+        "user_rule:0",
+        "yes_no",
+        "Does it meet `condition`?",
+        {"t": 1},
+        rungs=("reader",),
+    )
+    store = AnswerStore()
+    store.put("checker", "checker", q, 0.95)
+    store.put("reader", "reader", q, reader_then)
+    then = Ladder(store).decide_one(replace(q, user_answer=user))
+    assert (then.value, then.decided_by) == (True, "checker")
+    store.put("reader", "reader", q, reader_now)
+    assert annotate._stale(store, q, then.value, then.decided_by, user) is stale
+
+
+def test_a_readings_user_answer_is_the_one_the_grader_sets():
+    """`annotate._user_answer` derives from the recorded decisions what
+    `_read_checks` set on each reading question."""
+    task_data = copy.deepcopy(record().task)
+    user = task_data["simulated_user"]
+    user["approvals"][0]["only_if"] = "the event moves to Thursday"
+    user["facts"] = [
+        {
+            "id": "crew",
+            "value": "Luis",
+            "reveal_when": "the assistant asks who is on the crew",
+        }
+    ]
+    op = "calendar.update"
+    decisions = [
+        {"after_turn": 1, "action": "approve", "operation": op},
+        {"after_turn": 1, "action": "refuse", "operation": op},
+        {
+            "after_turn": 1,
+            "action": "reveal",
+            "fact_ids": ["crew"],
+            "operation": op,
+            "approval": "approve",
+        },
+        {
+            "after_turn": 1,
+            "action": "reveal",
+            "fact_ids": ["crew"],
+            "operation": op,
+            "approval": "refuse",
+        },
+        {"after_turn": 1, "action": "dont_know"},
+        {"after_turn": 1, "action": "decline"},
+        {"after_turn": 1, "action": "end", "saw": "finished"},
+        {"after_turn": 1, "action": "end", "saw": "no_progress"},
+    ]
+    rec = record(decisions=decisions, task_data=task_data)
+    task = Task.model_validate(rec.task)
+    checked = [
+        (q.id, confirms)
+        for i, d in enumerate(decisions)
+        for q, confirms, _ in grade_module._read_checks(rec, task, d, i)
+    ]
+    assert {qid.split(":")[0] for qid, _ in checked} == {"user_read", "user_rule"}
+    assert any(".approval" in qid for qid, _ in checked)
+    for qid, confirms in checked:
+        assert annotate._user_answer(qid, decisions) is confirms, qid
 
 
 @pytest.mark.parametrize(
