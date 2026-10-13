@@ -2,6 +2,7 @@
 
 import copy
 import json
+from dataclasses import replace
 
 import pytest
 
@@ -205,6 +206,27 @@ def test_annotation_stages_changed_readings_before_causality_but_preserves_defer
         verdict_path.write_text(json.dumps(refreshed))
         annotate.main([str(verdict_path), "--answers", str(answer_path)])
         assert run(rec, answers, store=AnswerStore(answer_path))["outcome"] == "pass"
+
+
+@pytest.mark.parametrize("reader", [0.05, 0.5])
+def test_a_checker_decided_reading_is_not_stale_when_its_answers_are_unchanged(reader):
+    """The verdict records a reading the checker decided, as a tie-break for the
+    simulated user (the reader sure against it) or a re-check (the reader
+    unsure). Replayed from the same answers, it decides the same: annotation
+    must not ask for a regrade before the causal question forever."""
+    q = Question(
+        "user_rule:0",
+        "yes_no",
+        "Does it meet `condition`?",
+        {"turn": 1},
+        rungs=("reader",),
+    )
+    store = AnswerStore()
+    store.put("reader", "reader", q, reader)
+    store.put("checker", "checker", q, 0.95)
+    live = Ladder(store).decide_one(replace(q, user_answer=True))
+    assert (live.value, live.decided_by) == (True, "checker")
+    assert not annotate._stale(store, q, live.value, live.decided_by)
 
 
 @pytest.mark.parametrize(

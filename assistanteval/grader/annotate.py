@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from dataclasses import replace
 from pathlib import Path
 
 from assistanteval.grader.judges import HUMAN, AnswerStore, Ladder, Question
@@ -40,7 +41,13 @@ def ask(q: Question) -> bool | str | None:
 
 
 def _stale(store: AnswerStore, q: Question, value, decided_by: str) -> bool:
-    """Whether the saved answers now decide `q` differently from the verdict."""
+    """Whether the saved answers now decide `q` differently from the verdict.
+
+    A recorded question has no `user_answer`. A reading the checker decided was
+    either a re-check or a tie-break for the simulated user; either way, its
+    value is the answer to replay it with."""
+    if decided_by == "checker":
+        q = replace(q, user_answer=value)
     current = Ladder(store).decide_one(q)
     return (current.value, current.decided_by) != (value, decided_by)
 
