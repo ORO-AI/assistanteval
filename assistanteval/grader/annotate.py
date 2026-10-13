@@ -40,15 +40,24 @@ def ask(q: Question) -> bool | str | None:
     )
 
 
-def _stale(store: AnswerStore, q: Question, value, decided_by: str) -> bool:
-    """Whether the saved answers now decide `q` differently from the verdict.
+def _user_answer(question_id: str, decisions: list[dict]) -> bool:
+    """The answer a reading's simulated-user decision implies, as `_read_checks`
+    sets it: a recorded question leaves it out, so the causal question's
+    readings replay with it from the decisions it records."""
+    kind, _, rest = question_id.partition(":")
+    index, _, approval = rest.partition(".")
+    decision = decisions[int(index)]
+    action = decision.get("approval") if approval else decision.get("action")
+    if kind == "user_rule":
+        return action == "approve"
+    return action not in ("dont_know", "decline")
 
-    A recorded question has no `user_answer`. A reading the checker decided was
-    either a re-check or a tie-break for the simulated user; either way, its
-    value is the answer to replay it with."""
-    if decided_by == "checker":
-        q = replace(q, user_answer=value)
-    current = Ladder(store).decide_one(q)
+
+def _stale(
+    store: AnswerStore, q: Question, value, decided_by: str, user_answer=None
+) -> bool:
+    """Whether the saved answers now decide `q` differently from the verdict."""
+    current = Ladder(store).decide_one(replace(q, user_answer=user_answer))
     return (current.value, current.decided_by) != (value, decided_by)
 
 
@@ -70,12 +79,14 @@ def main(argv: list[str] | None = None) -> int:
         ):
             q = Question(**item["question"])
             if q.id == "result_independent_of_simulator":
+                decisions = q.context["simulated_user_decisions"]
                 for reading in q.context["reading_judgments"]:
                     changed |= _stale(
                         store,
                         Question(**reading["question"]),
                         reading["answer"],
                         reading["decided_by"],
+                        _user_answer(reading["question"]["id"], decisions),
                     )
                 if changed:
                     print(
